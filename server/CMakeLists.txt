@@ -7,3 +7,6 @@ add_executable(ares_server ${source_server})
 
 target_link_libraries(ares_server ${SFML_LIBRARIES})
 target_link_libraries(ares_server ares_protocol)
+
+install(TARGETS ares_server DESTINATION ${CMAKE_INSTALL_PREFIX}/server)
+install(DIRECTORY ../client/assets DESTINATION ${CMAKE_INSTALL_PREFIX}/server)
