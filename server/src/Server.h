@@ -1,7 +1,6 @@
-#ifndef ARES_SERVER_H
-#define ARES_SERVER_H
+#pragma once
 
-#include "listener_thread.h"
+#include "ListenerThread.h"
 
 #include <list>
 
@@ -16,5 +15,3 @@ private:
 
     std::list<std::shared_ptr<Client>> m_all_client;
 };
-
-#endif
