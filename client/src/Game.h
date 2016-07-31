@@ -7,13 +7,13 @@
 
 #include <SFML/Graphics.hpp>
 #include "Player.h"
-#include "../../engine/src/TextureManager.h"
+#include <TextureManager.h>
 #include "PlayerCommands.h"
+#include <Tilemap.h>
 
 
 class Game {
     sf::RenderWindow mWindow;
-    TextureManager textureManager;
     Player player;
     PlayerCommands playerCommands;
 public:
@@ -27,6 +27,10 @@ private:
     void update(sf::Time deltaTime);
 
     void render();
+
+    Tilemap map;
+
+    sf::View calculateViewport();
 };
 
 

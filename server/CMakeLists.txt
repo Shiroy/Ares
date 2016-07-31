@@ -13,6 +13,7 @@ set(source_server src/Client.cpp src/Client.h
 find_package(SFML COMPONENTS system network REQUIRED)
 
 include_directories(${SFML_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/vendor)
 add_executable(ares_server ${source_server})
 
 if(UNIX)

@@ -12,6 +12,7 @@
 class TextureManager {
     std::map<std::string, sf::Texture> textures;
 public:
+    static TextureManager& getInstance();
     sf::Texture &getTexture(const std::string &filename);
 };
 
