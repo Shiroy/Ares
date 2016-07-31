@@ -1,4 +1,4 @@
-#include "listener_thread.h"
+#include "ListenerThread.h"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>

@@ -1,10 +1,9 @@
-#ifndef ARES_LISTENER_THREAD
-#define ARES_LISTENER_THREAD
+#pragma once
 
 #include <atomic>
-#include "client.h"
+#include "Client.h"
 #include <memory>
-#include "locked_queue.h"
+#include "LockedQueue.h"
 
 class Listener_Thread
 {
@@ -24,5 +23,3 @@ private:
     LockedQueue<std::shared_ptr<Client>> m_sessionToAdd;
     LockedQueue<std::shared_ptr<Client>> m_sessionToRemove;
 };
-
-#endif

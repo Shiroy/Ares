@@ -1,5 +1,4 @@
-#ifndef ARES_LOCKED_QUEUE
-#define ARES_LOCKED_QUEUE
+#pragma once
 
 #include <mutex>
 #include <queue>
@@ -34,5 +33,3 @@ public:
 private:
     std::mutex m_mutex;
 };
-
-#endif
