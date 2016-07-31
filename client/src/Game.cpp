@@ -7,7 +7,6 @@
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player = Player();
     player.setTexture(textureManager.getTexture("assets/img/char_64_64_player.png"));
-    player.setTextureRect(sf::IntRect(0, 128, 64, 64));
     player.setPosition(100.f, 100.f);
     player.setSpeed(100.f);
 }
@@ -40,6 +39,9 @@ void Game::processEvents() {
 }
 
 void Game::update(sf::Time deltaTime) {
+
+    player.update(deltaTime);
+
     sf::Vector2f movement(0.f, 0.f);
     if (playerCommands.isMIsMovingUp())
         movement.y -= player.getSpeed();
@@ -50,8 +52,13 @@ void Game::update(sf::Time deltaTime) {
     if (playerCommands.isMIsMovingRight())
         movement.x += player.getSpeed();
     player.move(movement * deltaTime.asSeconds());
-}
 
+    if (movement.x > 0.f) player.play("right");
+    if (movement.x < 0.f) player.play("left");
+    if (movement.y > 0.f) player.play("down");
+    if (movement.y < 0.f) player.play("up");
+    if (movement.x == 0.f && movement.y == 0.f) player.stop();
+}
 void Game::render() {
     mWindow.clear();
     mWindow.draw(player);
