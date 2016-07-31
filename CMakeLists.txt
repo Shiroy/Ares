@@ -6,6 +6,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 project(Ares)
 
+add_definitions(-std=c++11)
+
 add_subdirectory(client)
 add_subdirectory(server)
 add_subdirectory(protocol)

@@ -7,7 +7,7 @@ set(source_client
 find_package(SFML COMPONENTS system window graphics audio network REQUIRED)
 
 include_directories(${SFML_INCLUDE_DIR})
-add_executable(ares_client ${source_client})
+add_executable(ares_client ${source_client} src/Game.cpp src/Game.h src/Player.cpp src/Player.h src/PlayerCommands.cpp src/PlayerCommands.h)
 
 
 target_link_libraries(ares_client ${SFML_LIBRARIES})
