@@ -1,3 +1,0 @@
-void remove_me() {
-    
-}
