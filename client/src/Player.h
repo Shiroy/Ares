@@ -7,8 +7,9 @@
 
 
 #include "../../engine/src/Entity.h"
+#include "../../engine/src/AnimatedSpriteCharacter.h"
 
-class Player : public Entity {
+class Player : public Entity, public AnimatedSpriteCharacter {
     float speed;
 public:
     float getSpeed() const;

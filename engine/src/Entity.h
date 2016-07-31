@@ -6,9 +6,7 @@
 #define ARES_ENTITY_H
 
 
-#include <SFML/Graphics/Sprite.hpp>
-
-class Entity : public sf::Sprite {
+class Entity {
 };
 
 
