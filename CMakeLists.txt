@@ -12,6 +12,7 @@ add_subdirectory(client)
 add_subdirectory(server)
 add_subdirectory(protocol)
 add_subdirectory(engine)
+add_subdirectory(vendor)
 
 add_custom_target(install_${PROJECT_NAME}
         make install

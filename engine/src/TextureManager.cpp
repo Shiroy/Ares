@@ -17,3 +17,8 @@ sf::Texture &TextureManager::getTexture(const std::string &filename) {
     }
     return textures[filename];
 }
+
+TextureManager &TextureManager::getInstance() {
+    static TextureManager instance;
+    return instance;
+}
