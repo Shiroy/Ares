@@ -2,20 +2,23 @@
 // Created by tdancois on 7/31/16.
 //
 
+#include <SFML/Graphics/Text.hpp>
+#include <sstream>
 #include "QuadTree.h"
 
 QuadTree::QuadTree(const unsigned int &x,
                    const unsigned int &y,
                    const unsigned int &width,
                    const unsigned int &height,
-                   const unsigned int &node_capacity,
-                   const unsigned int &level) :
-        node_capacity(node_capacity),
-        level(level),
+                   const unsigned int &node_capacity_,
+                   const unsigned int &level_) :
+        node_capacity(node_capacity_),
+        level(level_),
         northWest(nullptr),
         northEast(nullptr),
         southWest(nullptr),
-        southEast(nullptr){
+        southEast(nullptr),
+        isSplit(false) {
 
     shape.setPosition(x, y);
 
@@ -31,21 +34,22 @@ QuadTree::~QuadTree() {
 }
 
 void QuadTree::insert(sf::Sprite &node) {
-    if(split()){
-        if(northWest->shape.getLocalBounds().intersects(node.getLocalBounds())) northWest->insert(node);
-        else if(northEast->shape.getLocalBounds().intersects(node.getLocalBounds())) northEast->insert(node);
-        else if(southWest->shape.getLocalBounds().intersects(node.getLocalBounds())) southWest->insert(node);
-        else if(southEast->shape.getLocalBounds().intersects(node.getLocalBounds())) southEast->insert(node);
+    if (split()) {
+        if (contains(northWest, node)) northWest->insert(node);
+        else if (contains(northEast, node)) northEast->insert(node);
+        else if (contains(southWest, node)) southWest->insert(node);
+        else if (contains(southEast, node)) southEast->insert(node);
+        else nodes.push_back(&node);
     }
-    else{
+    else {
         nodes.push_back(&node);
     }
 }
 
 bool QuadTree::split() {
-    if(splited()) return true;
+    if (isSplit) return true;
 
-    if (level == QuadTree::maxLevel || nodes.size() > node_capacity) return false;
+    if (level == maxLevel || nodes.size() < node_capacity) return false;
 
     unsigned int subLevel = level + 1;
 
@@ -54,56 +58,125 @@ bool QuadTree::split() {
     unsigned int subWidth = shape.getSize().x / 2;
     unsigned int subHeight = shape.getSize().y / 2;
 
-    northWest = new QuadTree(parentX, parentY, subWidth, subHeight, subLevel);
-    northEast = new QuadTree(parentX + subWidth, parentY, subWidth, subHeight, subLevel);
-    southWest = new QuadTree(parentX, parentY, subWidth, subHeight + subHeight, subLevel);
-    southEast = new QuadTree(parentX + subWidth, parentY, subWidth, subHeight + subHeight, subLevel);
+    northWest = new QuadTree(parentX,
+                             parentY,
+                             subWidth,
+                             subHeight,
+                             node_capacity, subLevel);
+    northEast = new QuadTree(parentX + subWidth,
+                             parentY,
+                             subWidth,
+                             subHeight,
+                             node_capacity, subLevel);
+    southWest = new QuadTree(parentX,
+                             parentY + subHeight,
+                             subWidth,
+                             subHeight,
+                             node_capacity, subLevel);
+    southEast = new QuadTree(parentX + subWidth,
+                             parentY + subHeight,
+                             subWidth,
+                             subHeight,
+                             node_capacity, subLevel);
 
+    isSplit = true;
+    
     return true;
 }
 
 
 unsigned int QuadTree::nodes_size() const {
-    if(splited()){
-        return northEast->nodes_size() + northWest->nodes_size() + southEast->nodes_size() + southWest->nodes_size();
+    if (isSplit) {
+        return nodes.size() + northEast->nodes_size() + northWest->nodes_size() + southEast->nodes_size() +
+               southWest->nodes_size();
     }
     else return nodes.size();
 }
 
 bool QuadTree::isSplitUseful() const {
-    return nodes_size() < node_capacity;
+    return nodes_size() > node_capacity;
 }
 
-std::vector<sf::Sprite*> QuadTree::getNodesAt(const int &x, const int &y) {
-    if(splited()){
-        if(northWest->shape.getLocalBounds().contains(x, y)) return northWest->getNodesAt(x, y);
-        if(northEast->shape.getLocalBounds().contains(x, y)) return northEast->getNodesAt(x, y);
-        if(southWest->shape.getLocalBounds().contains(x, y)) return southWest->getNodesAt(x, y);
-        if(southEast->shape.getLocalBounds().contains(x, y)) return southEast->getNodesAt(x, y);
+std::list<sf::Sprite *> QuadTree::getNodesAt(const int &x, const int &y) {
+    std::list<sf::Sprite *> nodesAt;
+    if (isSplit) {
+        if (northWest->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(northWest->getNodesAt(x, y));
+        if (northEast->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(northEast->getNodesAt(x, y));
+        if (southWest->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(southWest->getNodesAt(x, y));
+        if (southEast->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(southEast->getNodesAt(x, y));
     }
-    else{
-        std::vector<sf::Sprite*> found_nodes;
-        for(auto node: nodes){
-            if(node->getLocalBounds().contains(x, y)) found_nodes.push_back(node);
-        }
-        return found_nodes;
+    for (auto node: nodes) {
+        if (node->getGlobalBounds().contains(x, y)) nodesAt.push_back(node);
     }
+    return nodesAt;
 }
 
-bool QuadTree::splited() const {
-    return northWest && northEast && southWest && southEast;
-}
-
-void QuadTree::draw(sf::RenderTarget &canvas) const{
-    canvas.draw( shape );
-
-    if(splited()){
+void QuadTree::draw(sf::RenderTarget &canvas) {
+    if (isSplit) {
         northWest->draw(canvas);
         northEast->draw(canvas);
         southWest->draw(canvas);
         southEast->draw(canvas);
     }
+    else {
+        shape.setFillColor(sf::Color::Transparent);
+        shape.setOutlineColor(sf::Color::Cyan);
+        shape.setOutlineThickness(2);
+
+        canvas.draw(shape);
+    }
+
+    if (nodes.size() > 0) {
+        std::string str;
+
+
+        std::string number;
+        std::stringstream strstream;
+        strstream << nodes.size();
+        str = "size " + strstream.str();
+        std::stringstream strstream2;
+        strstream2 << level;
+        str += " (level " + strstream.str() + ")";
+
+        sf::Font font;
+        if (!font.loadFromFile("assets/font/FreeSans.ttf")) {
+            // error...
+        }
+
+        sf::Text text;
+        text.setString(str);
+        text.setFont(font);
+        text.setCharacterSize(17);
+        text.setColor(sf::Color::Red);
+        text.setPosition(shape.getGlobalBounds().left + shape.getOutlineThickness(),
+                         shape.getGlobalBounds().top + level * 17);
+
+        canvas.draw(text);
+    }
 }
 
+bool QuadTree::contains(const QuadTree *child, const sf::Sprite &sprite) {
+    sf::FloatRect container = child->shape.getGlobalBounds();
+    sf::FloatRect node = sprite.getGlobalBounds();
 
+    return node.top > container.top &&
+           node.left > container.left &&
+           node.top + node.height < container.top + container.height &&
+           node.left + node.width < container.left + container.width;
+}
 
+void QuadTree::setShape(const sf::RectangleShape &shape) {
+    QuadTree::shape = shape;
+}
+
+void QuadTree::setShape(const unsigned int &x, const unsigned int &y, const unsigned int &width,
+                        const unsigned int &height) {
+    shape.setPosition(x, y);
+
+    sf::Vector2f size(width, height);
+    shape.setSize(size);
+}
+
+void QuadTree::setNode_capacity(unsigned int n) {
+    QuadTree::node_capacity = n;
+}

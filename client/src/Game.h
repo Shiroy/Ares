@@ -10,12 +10,15 @@
 #include <TextureManager.h>
 #include "PlayerCommands.h"
 #include <Tilemap.h>
+#include <QuadTree.h>
 
 
 class Game {
     sf::RenderWindow mWindow;
     Player player;
     PlayerCommands playerCommands;
+    QuadTree quadTree;
+    std::vector<AnimatedSpriteCharacter> chars;
 public:
     Game();
 

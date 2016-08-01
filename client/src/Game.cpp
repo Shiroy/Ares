@@ -8,11 +8,23 @@
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player = Player();
     player.setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_player.png"));
-    player.setTextureRect(sf::IntRect(0, 128, 64, 64));
     player.setPosition(100.f, 100.f);
-    player.setSpeed(100.f);
+    player.setSpeed(1000.f);
 
     map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
+
+    unsigned int quadsize = std::max(map.getMapSize().x, map.getMapSize().y);
+    quadTree.setShape(0, 0, quadsize, quadsize);
+    //quadTree.setNode_capacity(6);
+
+    std::srand(std::time(0));
+    for (unsigned int i = 1; i < 30; i++) {
+        AnimatedSpriteCharacter character;
+        character.setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_foe.png"));
+        character.setPosition(std::rand() % quadsize, std::rand() % quadsize);
+        chars.push_back(character);
+        quadTree.insert(character);
+    }
 }
 
 void Game::run() {
@@ -71,6 +83,10 @@ void Game::render() {
     mWindow.clear();
     mWindow.draw(map);
     mWindow.draw(player);
+    for (auto character: chars) {
+        mWindow.draw(character);
+    }
+    quadTree.draw(mWindow);
     mWindow.display();
 }
 
