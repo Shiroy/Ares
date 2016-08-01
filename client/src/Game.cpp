@@ -48,14 +48,19 @@ void Game::update(sf::Time deltaTime) {
 
     sf::Vector2f movement(0.f, 0.f);
     if (playerCommands.isMIsMovingUp())
-        movement.y -= player.getSpeed();
+        movement.y -= 1;
     if (playerCommands.isMIsMovingDown())
-        movement.y += player.getSpeed();
+        movement.y += 1;
     if (playerCommands.isMIsMovingLeft())
-        movement.x -= player.getSpeed();
+        movement.x -= 1;
     if (playerCommands.isMIsMovingRight())
-        movement.x += player.getSpeed();
-    player.move(movement * deltaTime.asSeconds());
+        movement.x += 1;
+
+    if(movement != sf::Vector2f(0.0f, 0.0f)) {
+        normalize(movement);
+        movement *= player.getSpeed();
+        player.move(movement * deltaTime.asSeconds());
+    }
 
     if (movement.x > 0.f) player.play("right");
     if (movement.x < 0.f) player.play("left");
