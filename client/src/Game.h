@@ -18,7 +18,7 @@ class Game {
     Player player;
     PlayerCommands playerCommands;
     QuadTree quadTree;
-    std::vector<AnimatedSpriteCharacter> chars;
+    std::list<Character> chars;
 public:
     Game();
 

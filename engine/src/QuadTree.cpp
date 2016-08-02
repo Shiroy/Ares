@@ -117,6 +117,10 @@ std::list<sf::Sprite *> QuadTree::getNodesAt(const int &x, const int &y) {
     return nodesAt;
 }
 
+std::list<sf::Sprite *> QuadTree::getNodesAt(const sf::Vector2f pos) {
+    return getNodesAt(pos.x, pos.y);
+}
+
 void QuadTree::draw(sf::RenderTarget &canvas) {
     if (isSplit) {
         northWest->draw(canvas);
@@ -192,3 +196,27 @@ void QuadTree::setShape(const unsigned int &x, const unsigned int &y, const unsi
 void QuadTree::setNode_capacity(unsigned int n) {
     QuadTree::node_capacity = n;
 }
+
+bool QuadTree::optimize() {
+    if (isSplitUseful()) return false;
+    return unsplit();
+}
+
+bool QuadTree::unsplit() {
+    if (!isSplit) return false;
+    northEast->unsplit();
+    northWest->unsplit();
+    southEast->unsplit();
+    southWest->unsplit();
+    nodes.merge(northEast->nodes);
+    nodes.merge(northWest->nodes);
+    nodes.merge(southEast->nodes);
+    nodes.merge(southWest->nodes);
+    delete northEast;
+    delete northWest;
+    delete southEast;
+    delete southWest;
+    isSplit = false;
+    return true;
+}
+

@@ -4,6 +4,7 @@
 
 #include "Game.h"
 #include <MathUtil.h>
+#include <iostream>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player = Player();
@@ -19,12 +20,13 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
 
     std::srand(std::time(0));
     for (unsigned int i = 1; i < 200; i++) {
-        AnimatedSpriteCharacter *character = new AnimatedSpriteCharacter();
+        Character *character = new Character();
         character->setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_foe.png"));
         character->setPosition(std::rand() % quadsize, std::rand() % quadsize);
         chars.push_back(*character);
         quadTree.insert(character);
     }
+
 }
 
 void Game::run() {
@@ -47,6 +49,16 @@ void Game::processEvents() {
             case sf::Event::KeyReleased:
                 playerCommands.handleInput(event.key.code, false);
                 break;
+            case sf::Event::MouseButtonPressed:
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    auto nodes = quadTree.getNodesAt(
+                            mWindow.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+                    if (nodes.size() > 0) {
+                        Character *c = dynamic_cast<Character *>(nodes.back());
+                        player.setTarget(c);
+                    }
+                }
+                break;
             case sf::Event::Closed:
                 mWindow.close();
                 break;
@@ -59,13 +71,13 @@ void Game::update(sf::Time deltaTime) {
     player.update(deltaTime);
 
     sf::Vector2f movement(0.f, 0.f);
-    if (playerCommands.isMIsMovingUp())
+    if (playerCommands.isMovingUp())
         movement.y -= player.getSpeed();
-    if (playerCommands.isMIsMovingDown())
+    if (playerCommands.isMovingDown())
         movement.y += player.getSpeed();
-    if (playerCommands.isMIsMovingLeft())
+    if (playerCommands.isMovingLeft())
         movement.x -= player.getSpeed();
-    if (playerCommands.isMIsMovingRight())
+    if (playerCommands.isMovingRight())
         movement.x += player.getSpeed();
     player.move(movement * deltaTime.asSeconds());
 
@@ -83,6 +95,7 @@ void Game::render() {
     mWindow.clear();
     mWindow.draw(map);
     mWindow.draw(player);
+    player.drawTarget(mWindow);
     for (auto character: chars) {
         mWindow.draw(character);
     }

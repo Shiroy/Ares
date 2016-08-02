@@ -54,11 +54,15 @@ public:
 
     bool unsplit();
 
+    bool optimize();
+
     unsigned int nodes_size() const;
 
     bool isSplitUseful() const;
 
     std::list<sf::Sprite *> getNodesAt(const int &x, const int &y);
+
+    std::list<sf::Sprite *> getNodesAt(const sf::Vector2f pos);
 
     void draw(sf::RenderTarget &canvas);
 };
