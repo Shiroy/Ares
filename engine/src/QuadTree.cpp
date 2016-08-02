@@ -27,22 +27,22 @@ QuadTree::QuadTree(const unsigned int &x,
 }
 
 QuadTree::~QuadTree() {
-    delete northWest;
+    delete northEast;
     delete northWest;
     delete southEast;
     delete southWest;
 }
 
-void QuadTree::insert(sf::Sprite &node) {
+void QuadTree::insert(sf::Sprite *node) {
     if (split()) {
         if (contains(northWest, node)) northWest->insert(node);
         else if (contains(northEast, node)) northEast->insert(node);
         else if (contains(southWest, node)) southWest->insert(node);
         else if (contains(southEast, node)) southEast->insert(node);
-        else nodes.push_back(&node);
+        else nodes.push_back(node);
     }
     else {
-        nodes.push_back(&node);
+        nodes.push_back(node);
     }
 }
 
@@ -80,6 +80,12 @@ bool QuadTree::split() {
                              node_capacity, subLevel);
 
     isSplit = true;
+
+    std::list<sf::Sprite *> old_nodes = nodes;
+    nodes.clear();
+    for (auto node: old_nodes) {
+        insert(node);
+    }
     
     return true;
 }
@@ -136,7 +142,7 @@ void QuadTree::draw(sf::RenderTarget &canvas) {
         str = "size " + strstream.str();
         std::stringstream strstream2;
         strstream2 << level;
-        str += " (level " + strstream.str() + ")";
+        str += " (level " + strstream2.str() + ")";
 
         sf::Font font;
         if (!font.loadFromFile("assets/font/FreeSans.ttf")) {
@@ -147,17 +153,23 @@ void QuadTree::draw(sf::RenderTarget &canvas) {
         text.setString(str);
         text.setFont(font);
         text.setCharacterSize(17);
-        text.setColor(sf::Color::Red);
+        text.setColor(sf::Color(255, (level + 1) * 50 % 255, 0));
         text.setPosition(shape.getGlobalBounds().left + shape.getOutlineThickness(),
                          shape.getGlobalBounds().top + level * 17);
 
         canvas.draw(text);
     }
+    for (auto node: nodes) {
+        sf::RectangleShape rshap(sf::Vector2f(node->getGlobalBounds().width, node->getGlobalBounds().height));
+        rshap.setPosition(node->getPosition());
+        rshap.setFillColor(sf::Color(255, (level + 1) * 50 % 255, 0));
+        canvas.draw(rshap);
+    }
 }
 
-bool QuadTree::contains(const QuadTree *child, const sf::Sprite &sprite) {
+bool QuadTree::contains(const QuadTree *child, const sf::Sprite *sprite) {
     sf::FloatRect container = child->shape.getGlobalBounds();
-    sf::FloatRect node = sprite.getGlobalBounds();
+    sf::FloatRect node = sprite->getGlobalBounds();
 
     return node.top > container.top &&
            node.left > container.left &&

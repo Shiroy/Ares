@@ -15,14 +15,14 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
 
     unsigned int quadsize = std::max(map.getMapSize().x, map.getMapSize().y);
     quadTree.setShape(0, 0, quadsize, quadsize);
-    //quadTree.setNode_capacity(6);
+    quadTree.setNode_capacity(10);
 
     std::srand(std::time(0));
-    for (unsigned int i = 1; i < 30; i++) {
-        AnimatedSpriteCharacter character;
-        character.setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_foe.png"));
-        character.setPosition(std::rand() % quadsize, std::rand() % quadsize);
-        chars.push_back(character);
+    for (unsigned int i = 1; i < 200; i++) {
+        AnimatedSpriteCharacter *character = new AnimatedSpriteCharacter();
+        character->setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_foe.png"));
+        character->setPosition(std::rand() % quadsize, std::rand() % quadsize);
+        chars.push_back(*character);
         quadTree.insert(character);
     }
 }

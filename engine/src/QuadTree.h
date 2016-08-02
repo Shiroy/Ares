@@ -46,9 +46,9 @@ public:
 
     void setShape(const sf::RectangleShape &shape);
 
-    bool contains(const QuadTree *child, const sf::Sprite &sprite);
+    bool contains(const QuadTree *child, const sf::Sprite *sprite);
 
-    void insert(sf::Sprite &node);
+    void insert(sf::Sprite *node);
 
     bool split();
 
