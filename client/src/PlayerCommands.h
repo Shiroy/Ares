@@ -7,25 +7,26 @@
 
 
 #include <SFML/Window/Keyboard.hpp>
+#include <QuadTree.h>
 
 class PlayerCommands {
 private:
-    bool mIsMovingUp;
-    bool mIsMovingDown;
-    bool mIsMovingLeft;
-    bool mIsMovingRight;
+    bool movingUp;
+    bool movingDown;
+    bool movingLeft;
+    bool movingRight;
 public:
     PlayerCommands();
 
     void handleInput(const sf::Keyboard::Key &key, const bool &isPressed);
 
-    bool isMIsMovingUp() const;
+    bool isMovingUp() const;
 
-    bool isMIsMovingDown() const;
+    bool isMovingDown() const;
 
-    bool isMIsMovingLeft() const;
+    bool isMovingLeft() const;
 
-    bool isMIsMovingRight() const;
+    bool isMovingRight() const;
 };
 
 
