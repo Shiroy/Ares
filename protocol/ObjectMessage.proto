@@ -1,0 +1,43 @@
+import "Position.proto";
+
+package AresProtocol;
+
+message ModifyObject {
+    required uint32 id = 1;
+
+    oneof action {
+        CreateObject create = 2;
+        UpdateObject update = 3;
+        DeleteObject delete = 4;
+    }
+
+    message CreateObject {
+        required bool myself = 1;
+        required Position position = 2;
+
+        enum ObjectType {
+            NPC = 1;
+            PLAYER = 2;
+            GAMEOBJECT = 3;
+        }
+        required ObjectType type = 3;
+        repeated ReflectorMap reflector = 4;
+    }
+
+    message UpdateObject {
+        repeated ReflectorMap reflector = 1;
+    }
+
+    message DeleteObject {
+
+    }
+
+    message ReflectorMap {
+        required string key = 1;
+        oneof value {
+            string string = 2;
+            float float = 3;
+            bool boolean = 4;
+        }
+    }
+}

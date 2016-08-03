@@ -3,7 +3,7 @@
 #include <atomic>
 #include "Client.h"
 #include <memory>
-#include "LockedQueue.h"
+#include <LockedQueue.h>
 
 class Listener_Thread
 {

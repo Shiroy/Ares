@@ -4,6 +4,7 @@
 
 #include "Game.h"
 #include <MathUtil.h>
+#include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player = Player();
@@ -17,12 +18,18 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
 
 void Game::run() {
     sf::Clock clock;
+
+    std::thread netThread(std::bind(&NetworkThread::run, std::ref(networkThread)));
+
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
         processEvents();
         update(deltaTime);
         render();
     }
+
+    networkThread.stop();
+    netThread.join();
 }
 
 void Game::processEvents() {

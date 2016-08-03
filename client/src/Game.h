@@ -9,6 +9,7 @@
 #include "Player.h"
 #include <TextureManager.h>
 #include "PlayerCommands.h"
+#include "NetworkThread.h"
 #include <Tilemap.h>
 
 
@@ -31,6 +32,8 @@ private:
     Tilemap map;
 
     sf::View calculateViewport();
+
+    NetworkThread networkThread;
 };
 
 

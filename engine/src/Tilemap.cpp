@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <SFML/Graphics/VertexArray.hpp>
+#include <cmath>
 
 #define var_debug(x) std::cout << #x << " = " << x << std::endl
 
@@ -33,7 +34,7 @@ void Tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     int start_column = std::max(0, static_cast<int>(floor(viewport.left / tile_width)));
     //var_debug(start_column);
-    int start_row = std::max(0, static_cast<int>(floor(viewport.top / tile_height)));
+    int start_row = std::max(0, static_cast<int>(std::floor(viewport.top / tile_height)));
     //var_debug(start_row);
     int end_column = 1+std::min(width, static_cast<int>(ceil(start_column + viewport.width/tile_width)));
     //var_debug(end_column);

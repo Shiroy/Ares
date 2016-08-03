@@ -1,11 +1,11 @@
 #include "Client.h"
 
-Client::Client()
+Client::Client() : toBeDeleted(false)
 {
 
 }
 
-void Client::sendPacket(const sf::Packet &packet) {
+void Client::sendPacket(const AresProtocol::AresMessage& packet) {
     m_sentPacket.push_back(packet);
 }
 
