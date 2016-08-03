@@ -23,6 +23,12 @@ void Game::run() {
 
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
+
+        while(networkThread.getReceptionQueue().size() > 0){
+            handlePacket(networkThread.getReceptionQueue().front());
+            networkThread.getReceptionQueue().pop();
+        }
+
         processEvents();
         update(deltaTime);
         render();
@@ -95,4 +101,18 @@ sf::View Game::calculateViewport() {
 
     sf::Vector2i topLeft(static_cast<int>(clamp(0.0f, topX, maxX)), static_cast<int>(clamp(0.0f, topY, maxY)));
     return sf::View(sf::FloatRect(topLeft.x, topLeft.y, mWindow.getSize().x, mWindow.getSize().y));
+}
+
+void Game::handlePacket(const AresProtocol::AresMessage &message) {
+    switch (message.message_case()){
+        case AresProtocol::AresMessage::kModifyObject:
+            handleMsgModifyObject(message.modifyobject());
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
+    //To be filled
 }

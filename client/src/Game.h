@@ -34,6 +34,10 @@ private:
     sf::View calculateViewport();
 
     NetworkThread networkThread;
+
+    void handlePacket(const AresProtocol::AresMessage &message);
+
+    void handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject);
 };
 
 

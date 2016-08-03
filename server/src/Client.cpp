@@ -10,5 +10,15 @@ void Client::sendPacket(const AresProtocol::AresMessage& packet) {
 }
 
 void Client::update() {
+    while(m_receivedPacket.size() > 0) {
+        handlePacket(m_receivedPacket.front());
+        m_receivedPacket.pop();
+    }
+}
 
+void Client::handlePacket(const AresProtocol::AresMessage &message) {
+    switch (message.message_case()){
+        default:
+            break;
+    }
 }

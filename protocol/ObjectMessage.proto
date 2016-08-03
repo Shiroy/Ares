@@ -36,7 +36,7 @@ message ModifyObject {
         required string key = 1;
         oneof value {
             string string = 2;
-            float float = 3;
+            float number = 3;
             bool boolean = 4;
         }
     }

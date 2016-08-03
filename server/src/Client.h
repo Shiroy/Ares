@@ -40,4 +40,6 @@ private:
     std::weak_ptr<Player> player;
 
     bool toBeDeleted;
+
+    void handlePacket(const AresProtocol::AresMessage &message);
 };

@@ -42,4 +42,6 @@ public:
     void set_value_boolean(bool m_value_boolean);
 
     bool is_modified() const;
+
+    ValueType get_value_type() const { return type; }
 };

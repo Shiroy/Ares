@@ -22,8 +22,8 @@ void Tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     sf::IntRect viewport = target.getViewport(target.getView());
 
-    viewport.left = target.getView().getCenter().x - viewport.width/2;
-    viewport.top = target.getView().getCenter().y - viewport.height/2;
+    viewport.left = static_cast<int>(target.getView().getCenter().x - viewport.width/2);
+    viewport.top = static_cast<int>(target.getView().getCenter().y - viewport.height/2);
 
     std::vector<sf::Vertex> vertexArray;
     vertexArray.reserve((static_cast<int>(viewport.width) / tile_width) * (static_cast<int>(viewport.height) / tile_height));
@@ -34,7 +34,7 @@ void Tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     int start_column = std::max(0, static_cast<int>(floor(viewport.left / tile_width)));
     //var_debug(start_column);
-    int start_row = std::max(0, static_cast<int>(std::floor(viewport.top / tile_height)));
+    int start_row = std::max(0, static_cast<int>(floor(viewport.top / tile_height)));
     //var_debug(start_row);
     int end_column = 1+std::min(width, static_cast<int>(ceil(start_column + viewport.width/tile_width)));
     //var_debug(end_column);

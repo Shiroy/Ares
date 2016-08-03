@@ -27,6 +27,7 @@ void Server::run() {
             m_listenerThread.getSessionToAdd().pop();
 
             auto newPlayer = EntityManager::getInstance().createPlayer("Player", newSession);
+            newPlayer.lock()->addToWorld();
             newSession->setPlayer(newPlayer);
         }
 
