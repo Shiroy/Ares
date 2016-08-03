@@ -5,9 +5,9 @@
 #ifndef ARES_ANIMATEDSPRITE_H
 #define ARES_ANIMATEDSPRITE_H
 
+#include "Entity.h"
 #include "SpriteAnimation.h"
 
-#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Time.hpp>
 
@@ -15,7 +15,7 @@
 #include <map>
 #include <string>
 
-class AnimatedSprite : public sf::Sprite {
+class AnimatedSprite : public Entity {
 private:
     std::map<std::string, SpriteAnimation> animations;
     std::string current_animation;

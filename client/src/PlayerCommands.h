@@ -7,25 +7,37 @@
 
 
 #include <SFML/Window/Keyboard.hpp>
+#include <QuadTree.h>
+#include "Player.h"
 
 class PlayerCommands {
 private:
-    bool mIsMovingUp;
-    bool mIsMovingDown;
-    bool mIsMovingLeft;
-    bool mIsMovingRight;
+    Player *player;
+    bool movingUp;
+    bool movingDown;
+    bool movingLeft;
+    bool movingRight;
+    bool quadTreeDebug;
 public:
     PlayerCommands();
 
+    Player *getPlayer() const;
+
+    void setPlayer(Player *player);
+
     void handleInput(const sf::Keyboard::Key &key, const bool &isPressed);
 
-    bool isMIsMovingUp() const;
+    void updatePlayer(sf::Time deltaTime);
 
-    bool isMIsMovingDown() const;
+    bool isMovingUp() const;
 
-    bool isMIsMovingLeft() const;
+    bool isMovingDown() const;
 
-    bool isMIsMovingRight() const;
+    bool isMovingLeft() const;
+
+    bool isMovingRight() const;
+
+    bool isQuadTreeDebug() const;
 };
 
 
