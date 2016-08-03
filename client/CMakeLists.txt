@@ -2,7 +2,7 @@ set(source_client
         src/main.cpp
         src/Game.cpp src/Game.h
         src/Player.cpp src/Player.h
-        src/PlayerCommands.cpp src/PlayerCommands.h)
+        src/PlayerCommands.cpp src/PlayerCommands.h ../engine/src/Character.cpp ../engine/src/Character.h)
 
 find_package(SFML COMPONENTS system window graphics audio network REQUIRED)
 

@@ -5,16 +5,22 @@
 #ifndef ARES_PLAYER_H
 #define ARES_PLAYER_H
 
+#include "Character.h"
+#include <SFML/Graphics/RenderTarget.hpp>
 
-#include "../../engine/src/Entity.h"
-#include "../../engine/src/AnimatedSpriteCharacter.h"
-
-class Player : public Entity, public AnimatedSpriteCharacter {
+class Player : public Character {
     float speed;
+    Character *target;
 public:
     float getSpeed() const;
 
     void setSpeed(float speed);
+
+    const Character *getTarget() const;
+
+    void setTarget(Character *target);
+
+    void drawTarget(sf::RenderTarget &canvas) const;
 };
 
 

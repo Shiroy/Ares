@@ -2,42 +2,41 @@
 // Created by tdancois on 7/30/16.
 //
 
+#include <SFML/Window/Mouse.hpp>
 #include "PlayerCommands.h"
-
-PlayerCommands::PlayerCommands() : mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false),
-                                   mIsMovingRight(false) {
-}
 
 
 void PlayerCommands::handleInput(const sf::Keyboard::Key &key, const bool &isPressed) {
     switch (key) {
         case sf::Keyboard::Z:
-            mIsMovingUp = isPressed;
+            movingUp = isPressed;
             break;
         case sf::Keyboard::S:
-            mIsMovingDown = isPressed;
+            movingDown = isPressed;
             break;
         case sf::Keyboard::Q:
-            mIsMovingLeft = isPressed;
+            movingLeft = isPressed;
             break;
         case sf::Keyboard::D:
-            mIsMovingRight = isPressed;
+            movingRight = isPressed;
             break;
     }
 }
 
-bool PlayerCommands::isMIsMovingUp() const {
-    return mIsMovingUp;
+bool PlayerCommands::isMovingUp() const {
+    return movingUp;
 }
 
-bool PlayerCommands::isMIsMovingDown() const {
-    return mIsMovingDown;
+bool PlayerCommands::isMovingDown() const {
+    return movingDown;
 }
 
-bool PlayerCommands::isMIsMovingLeft() const {
-    return mIsMovingLeft;
+bool PlayerCommands::isMovingLeft() const {
+    return movingLeft;
 }
 
-bool PlayerCommands::isMIsMovingRight() const {
-    return mIsMovingRight;
+bool PlayerCommands::isMovingRight() const {
+    return movingRight;
 }
+
+PlayerCommands::PlayerCommands() : movingUp(false), movingDown(false), movingLeft(false), movingRight(false) {}
