@@ -5,7 +5,7 @@
 #include "Entity.h"
 #include "Player.h"
 
-Entity::Entity(long m_id, const std::string &m_name) : m_id(m_id), m_name(m_name) {
+Entity::Entity(unsigned int m_id, const std::string &m_name) : m_id(m_id), m_name(m_name) {
     setInitialValues();
 }
 
@@ -24,4 +24,8 @@ void Entity::setInitialValues() {
     m_reflectors["animation"] = "none";
     m_reflectors["scope"] = 230.0f;
     m_reflectors["speed"] = 300.0f;
+}
+
+void Entity::addToWorld() {
+
 }

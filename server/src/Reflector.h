@@ -11,5 +11,7 @@ public:
     std::map<std::string, ReflectorValue> getValueForCreation();
     std::map<std::string, ReflectorValue> getValueForUpdate();
 
+    void markAsClean();
+
     ReflectorValue& operator[](const std::string& key) { return m_value[key]; }
 };

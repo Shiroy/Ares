@@ -10,11 +10,11 @@ add_definitions(-std=c++11)
 
 add_subdirectory(client)
 add_subdirectory(server)
-add_subdirectory(protocol)
+add_subdirectory(shared)
 add_subdirectory(engine)
 add_subdirectory(vendor)
 
 add_custom_target(install_${PROJECT_NAME}
         make install
-        DEPENDS ares_client ares_engine ares_protocol ares_server
+        DEPENDS ares_client ares_engine ares_shared ares_server
         COMMENT "Installing ${PROJECT_NAME}")

@@ -7,10 +7,16 @@
 class Server
 {
 public:
-    Server();
+
+    static Server& getInstance();
+
     void run();
 
+    void broadcast(const AresProtocol::AresMessage& msg, std::shared_ptr<Client> sender, bool includeMyself = false);
+
 private:
+    Server();
+
     Listener_Thread m_listenerThread;
 
     std::list<std::shared_ptr<Client>> m_all_client;

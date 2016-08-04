@@ -4,6 +4,7 @@
 
 #include "Game.h"
 #include <MathUtil.h>
+#include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player = Player();
@@ -17,12 +18,24 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
 
 void Game::run() {
     sf::Clock clock;
+
+    std::thread netThread(std::bind(&NetworkThread::run, std::ref(networkThread)));
+
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
+
+        while(networkThread.getReceptionQueue().size() > 0){
+            handlePacket(networkThread.getReceptionQueue().front());
+            networkThread.getReceptionQueue().pop();
+        }
+
         processEvents();
         update(deltaTime);
         render();
     }
+
+    networkThread.stop();
+    netThread.join();
 }
 
 void Game::processEvents() {
@@ -88,4 +101,18 @@ sf::View Game::calculateViewport() {
 
     sf::Vector2i topLeft(static_cast<int>(clamp(0.0f, topX, maxX)), static_cast<int>(clamp(0.0f, topY, maxY)));
     return sf::View(sf::FloatRect(topLeft.x, topLeft.y, mWindow.getSize().x, mWindow.getSize().y));
+}
+
+void Game::handlePacket(const AresProtocol::AresMessage &message) {
+    switch (message.message_case()){
+        case AresProtocol::AresMessage::kModifyObject:
+            handleMsgModifyObject(message.modifyobject());
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
+    //To be filled
 }
