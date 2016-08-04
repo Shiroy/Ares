@@ -11,5 +11,7 @@ set(source_engine src/Entity.cpp src/Entity.h
         src/Player.cpp src/Player.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/json)
+include_directories(${CMAKE_SOURCE_DIR}/shared/src)
+include_directories(${SFML_INCLUDE_DIR})
 
 add_library(ares_engine STATIC ${source_engine})

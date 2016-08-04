@@ -1,0 +1,6 @@
+package AresProtocol;
+
+message Position {
+    required float x = 1;
+    required float y = 2;
+}

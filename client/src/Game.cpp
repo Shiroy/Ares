@@ -5,6 +5,7 @@
 #include "Game.h"
 #include <MathUtil.h>
 #include <iostream>
+#include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     entityManager = EntityManager::getInstance();
@@ -23,12 +24,24 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
 
 void Game::run() {
     sf::Clock clock;
+
+    std::thread netThread(std::bind(&NetworkThread::run, std::ref(networkThread)));
+
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
+
+        while(networkThread.getReceptionQueue().size() > 0){
+            handlePacket(networkThread.getReceptionQueue().front());
+            networkThread.getReceptionQueue().pop();
+        }
+
         processEvents();
         update(deltaTime);
         render();
     }
+
+    networkThread.stop();
+    netThread.join();
 }
 
 void Game::processEvents() {
@@ -59,8 +72,23 @@ void Game::processEvents() {
 }
 
 void Game::update(sf::Time deltaTime) {
-    if (!player.expired()) {
-        playerCommands.updatePlayer(deltaTime);
+
+    player.update(deltaTime);
+
+    sf::Vector2f movement(0.f, 0.f);
+    if (playerCommands.isMIsMovingUp())
+        movement.y -= 1;
+    if (playerCommands.isMIsMovingDown())
+        movement.y += 1;
+    if (playerCommands.isMIsMovingLeft())
+        movement.x -= 1;
+    if (playerCommands.isMIsMovingRight())
+        movement.x += 1;
+
+    if(movement != sf::Vector2f(0.0f, 0.0f)) {
+        normalize(movement);
+        movement *= player.getSpeed();
+        player.move(movement * deltaTime.asSeconds());
     }
 }
 void Game::render() {
@@ -94,4 +122,18 @@ sf::View Game::calculateViewport() {
 
     sf::Vector2i topLeft(static_cast<int>(clamp(0.0f, topX, maxX)), static_cast<int>(clamp(0.0f, topY, maxY)));
     return sf::View(sf::FloatRect(topLeft.x, topLeft.y, mWindow.getSize().x, mWindow.getSize().y));
+}
+
+void Game::handlePacket(const AresProtocol::AresMessage &message) {
+    switch (message.message_case()){
+        case AresProtocol::AresMessage::kModifyObject:
+            handleMsgModifyObject(message.modifyobject());
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
+    //To be filled
 }

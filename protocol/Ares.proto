@@ -1,0 +1,9 @@
+import "ObjectMessage.proto";
+
+package AresProtocol;
+
+message AresMessage {
+    oneof message {
+        AresProtocol.ModifyObject modifyObject = 1;
+    }
+}

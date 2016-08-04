@@ -6,6 +6,7 @@
 #define ARES_MATH_UTIL_H_H
 
 #include <algorithm>
+#include <cmath>
 
 template<class T>
 T clamp(T min, T value, T max) {

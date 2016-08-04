@@ -20,3 +20,9 @@ std::map<std::string, ReflectorValue> Reflector::getValueForUpdate() {
 std::map<std::string, ReflectorValue> Reflector::getValueForCreation() {
     return m_value;
 }
+
+void Reflector::markAsClean() {
+    for(auto& value: m_value){
+        value.second.markClean();
+    }
+}

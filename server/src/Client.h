@@ -1,8 +1,8 @@
 #pragma once
 
-#include "LockedQueue.h"
-#include <SFML/Network/Packet.hpp>
+#include <LockedQueue.h>
 #include <memory>
+#include <Ares.pb.h>
 
 class Player;
 
@@ -11,7 +11,7 @@ class Client
 public:
     Client();
 
-    void sendPacket(const sf::Packet& packet);
+    void sendPacket(const AresProtocol::AresMessage& packet);
 
     void update();
 
@@ -23,11 +23,23 @@ public:
         return player;
     }
 
-    LockedQueue<sf::Packet>& getReceptionQueue() {return m_receivedPacket;}
-    LockedQueue<sf::Packet>& getSendingQueue() { return  m_sentPacket;}
+    bool isToBeDeleted() const {
+        return toBeDeleted;
+    }
+
+    void deleteLater() {
+        toBeDeleted = true;
+    }
+
+    LockedQueue<AresProtocol::AresMessage>& getReceptionQueue() {return m_receivedPacket;}
+    LockedQueue<AresProtocol::AresMessage>& getSendingQueue() { return  m_sentPacket;}
 
 private:
-    LockedQueue<sf::Packet> m_receivedPacket;
-    LockedQueue<sf::Packet> m_sentPacket;
+    LockedQueue<AresProtocol::AresMessage> m_receivedPacket;
+    LockedQueue<AresProtocol::AresMessage> m_sentPacket;
     std::weak_ptr<Player> player;
+
+    bool toBeDeleted;
+
+    void handlePacket(const AresProtocol::AresMessage &message);
 };

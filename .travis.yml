@@ -21,29 +21,15 @@ matrix:
           packages:
             - g++-5
       env: COMPILER=g++-5
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-          packages:
-            - clang-3.6
-      env: COMPILER=clang++-3.6
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
-          packages:
-            - clang-3.7
-      env: COMPILER=clang++-3.7
 
 before_install:
   - sudo add-apt-repository ppa:george-edison55/cmake-3.x --yes
   - sudo apt-get update -qq
   - sudo apt-get install -y libsfml-dev cmake
+  - wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
+  - tar -xvf protobuf-2.6.1.tar.gz
+  - cd protobuf-2.6.1 && ./configure --prefix=/usr && make && sudo make install
+  - cd ..
 script:
   - mkdir install
   - mkdir build
