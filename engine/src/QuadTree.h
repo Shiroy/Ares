@@ -39,7 +39,7 @@ public:
              const unsigned int &node_capacity_ = 5,
              const unsigned int &level_ = 0);
 
-    void set_NodeCapacity(unsigned int n);
+    void setNodeCapacity(unsigned int n);
 
     void setShape(const unsigned int &x,
                   const unsigned int &y,

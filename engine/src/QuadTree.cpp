@@ -182,7 +182,7 @@ void QuadTree::setShape(const unsigned int &x, const unsigned int &y, const unsi
     shape.setSize(size);
 }
 
-void QuadTree::set_NodeCapacity(unsigned int n) {
+void QuadTree::setNodeCapacity(unsigned int n) {
     QuadTree::nodeCapacity = n;
 }
 

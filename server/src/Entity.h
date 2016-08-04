@@ -18,14 +18,16 @@ protected:
     Position m_position;
     Reflector m_reflectors;
 public:
-    Entity(long m_id, const std::string &m_name);
+    Entity(unsigned int m_id, const std::string &m_name);
     void move(float dx, float dy);
 
     virtual EntityType getType() { return ENTITY; }
 
+    virtual void addToWorld();
+
     void setInitialValues();
 
-    long getId() const {
+    unsigned int getId() const {
         return m_id;
     }
 
