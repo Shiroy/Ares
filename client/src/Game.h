@@ -11,14 +11,18 @@
 #include "PlayerCommands.h"
 #include <Tilemap.h>
 #include <QuadTree.h>
+#include <EntityManager.h>
 
 
 class Game {
     sf::RenderWindow mWindow;
-    Player player;
-    PlayerCommands playerCommands;
+
+    EntityManager *entityManager;
+
     QuadTree quadTree;
-    std::list<Entity> chars;
+
+    std::weak_ptr<Player> player;
+    PlayerCommands playerCommands;
 public:
     Game();
 

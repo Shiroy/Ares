@@ -8,11 +8,12 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include <QuadTree.h>
-#include "Player.h"
+#include <memory>
+#include <Player.h>
 
 class PlayerCommands {
 private:
-    Player *player;
+    std::weak_ptr<Player> player;
     bool movingUp;
     bool movingDown;
     bool movingLeft;
@@ -21,9 +22,9 @@ private:
 public:
     PlayerCommands();
 
-    Player *getPlayer() const;
+    const std::weak_ptr<Player> &getPlayer() const;
 
-    void setPlayer(Player *player);
+    void setPlayer(const std::weak_ptr<Player> &player);
 
     void handleInput(const sf::Keyboard::Key &key, const bool &isPressed);
 

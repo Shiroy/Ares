@@ -44,31 +44,31 @@ bool PlayerCommands::isMovingRight() const {
 PlayerCommands::PlayerCommands() : movingUp(false), movingDown(false), movingLeft(false), movingRight(false),
                                    quadTreeDebug(false) {}
 
-Player *PlayerCommands::getPlayer() const {
+const std::weak_ptr<Player> &PlayerCommands::getPlayer() const {
     return player;
 }
 
-void PlayerCommands::setPlayer(Player *player) {
+void PlayerCommands::setPlayer(const std::weak_ptr<Player> &player) {
     PlayerCommands::player = player;
 }
 
 void PlayerCommands::updatePlayer(sf::Time deltaTime) {
     sf::Vector2f movement(0.f, 0.f);
     if (movingUp)
-        movement.y -= player->getSpeed();
+        movement.y -= player.lock()->getSpeed();
     if (movingDown)
-        movement.y += player->getSpeed();
+        movement.y += player.lock()->getSpeed();
     if (movingLeft)
-        movement.x -= player->getSpeed();
+        movement.x -= player.lock()->getSpeed();
     if (movingRight)
-        movement.x += player->getSpeed();
-    player->move(movement * deltaTime.asSeconds());
+        movement.x += player.lock()->getSpeed();
+    player.lock()->move(movement * deltaTime.asSeconds());
 
-    if (movement.x > 0.f) player->play("right");
-    if (movement.x < 0.f) player->play("left");
-    if (movement.y > 0.f) player->play("down");
-    if (movement.y < 0.f) player->play("up");
-    if (movement.x == 0.f && movement.y == 0.f) player->stop();
+    if (movement.x > 0.f) player.lock()->play("right");
+    if (movement.x < 0.f) player.lock()->play("left");
+    if (movement.y > 0.f) player.lock()->play("down");
+    if (movement.y < 0.f) player.lock()->play("up");
+    if (movement.x == 0.f && movement.y == 0.f) player.lock()->stop();
 }
 
 bool PlayerCommands::isQuadTreeDebug() const {

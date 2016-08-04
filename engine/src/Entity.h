@@ -27,6 +27,8 @@ public:
     int getHealth() const;
 
     void setHealth(int health);
+
+    const sf::Vector2f &getCenter() const;
 };
 
 

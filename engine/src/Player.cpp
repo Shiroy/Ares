@@ -56,4 +56,3 @@ void Player::drawTarget(sf::RenderTarget &canvas) const {
 
 
 
-
