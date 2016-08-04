@@ -1,7 +1,8 @@
 set(source_client
         src/main.cpp
         src/Game.cpp src/Game.h
-        src/PlayerCommands.cpp src/PlayerCommands.h)
+        src/PlayerCommands.cpp src/PlayerCommands.h
+        src/NetworkThread.cpp src/NetworkThread.cpp)
 
 find_package(SFML COMPONENTS system window graphics audio network REQUIRED)
 

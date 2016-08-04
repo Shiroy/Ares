@@ -30,7 +30,7 @@ void Game::run() {
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
 
-        while(networkThread.getReceptionQueue().size() > 0){
+        while (networkThread.getReceptionQueue().size() > 0) {
             handlePacket(networkThread.getReceptionQueue().front());
             networkThread.getReceptionQueue().pop();
         }
@@ -72,23 +72,9 @@ void Game::processEvents() {
 }
 
 void Game::update(sf::Time deltaTime) {
-
-    player.update(deltaTime);
-
-    sf::Vector2f movement(0.f, 0.f);
-    if (playerCommands.isMIsMovingUp())
-        movement.y -= 1;
-    if (playerCommands.isMIsMovingDown())
-        movement.y += 1;
-    if (playerCommands.isMIsMovingLeft())
-        movement.x -= 1;
-    if (playerCommands.isMIsMovingRight())
-        movement.x += 1;
-
-    if(movement != sf::Vector2f(0.0f, 0.0f)) {
-        normalize(movement);
-        movement *= player.getSpeed();
-        player.move(movement * deltaTime.asSeconds());
+    if (!player.expired()) {
+        player.lock()->update(deltaTime);
+        playerCommands.updatePlayer(deltaTime);
     }
 }
 void Game::render() {
@@ -125,7 +111,7 @@ sf::View Game::calculateViewport() {
 }
 
 void Game::handlePacket(const AresProtocol::AresMessage &message) {
-    switch (message.message_case()){
+    switch (message.message_case()) {
         case AresProtocol::AresMessage::kModifyObject:
             handleMsgModifyObject(message.modifyobject());
             break;

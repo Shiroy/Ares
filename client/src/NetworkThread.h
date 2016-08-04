@@ -30,6 +30,7 @@ public:
     }
 
     void run();
+
     void stop() {
         m_stop = true;
     }

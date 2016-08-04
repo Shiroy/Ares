@@ -11,7 +11,7 @@ class Client
 public:
     Client();
 
-    void sendPacket(const AresProtocol::AresMessage& packet);
+    void sendPacket(const AresProtocol::AresMessage &packet);
 
     void update();
 
@@ -31,8 +31,9 @@ public:
         toBeDeleted = true;
     }
 
-    LockedQueue<AresProtocol::AresMessage>& getReceptionQueue() {return m_receivedPacket;}
-    LockedQueue<AresProtocol::AresMessage>& getSendingQueue() { return  m_sentPacket;}
+    LockedQueue<AresProtocol::AresMessage> &getReceptionQueue() { return m_receivedPacket; }
+
+    LockedQueue<AresProtocol::AresMessage> &getSendingQueue() { return m_sentPacket; }
 
 private:
     LockedQueue<AresProtocol::AresMessage> m_receivedPacket;

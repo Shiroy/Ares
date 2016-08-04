@@ -57,9 +57,9 @@ Server &Server::getInstance() {
 }
 
 void Server::broadcast(const AresProtocol::AresMessage &msg, std::shared_ptr<Client> sender, bool includeMyself) {
-    for(auto client: m_all_client) {
-        if(client == sender) {
-            if(includeMyself) {
+    for (auto client: m_all_client) {
+        if (client == sender) {
+            if (includeMyself) {
                 client->sendPacket(msg);
             }
         }

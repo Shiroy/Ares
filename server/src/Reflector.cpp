@@ -22,7 +22,7 @@ std::map<std::string, ReflectorValue> Reflector::getValueForCreation() {
 }
 
 void Reflector::markAsClean() {
-    for(auto& value: m_value){
+    for (auto &value: m_value) {
         value.second.markClean();
     }
 }
