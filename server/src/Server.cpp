@@ -50,3 +50,21 @@ void Server::run() {
 
     std::cout << "Exiting server" << std::endl;
 }
+
+Server &Server::getInstance() {
+    static Server instance;
+    return instance;
+}
+
+void Server::broadcast(const AresProtocol::AresMessage &msg, std::shared_ptr<Client> sender, bool includeMyself) {
+    for(auto client: m_all_client) {
+        if(client == sender) {
+            if(includeMyself) {
+                client->sendPacket(msg);
+            }
+        }
+        else {
+            client->sendPacket(msg);
+        }
+    }
+}

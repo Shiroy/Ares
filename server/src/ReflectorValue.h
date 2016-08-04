@@ -43,5 +43,7 @@ public:
 
     bool is_modified() const;
 
+    void markClean() { m_modified = false; }
+
     ValueType get_value_type() const { return type; }
 };

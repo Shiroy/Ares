@@ -13,4 +13,8 @@ public:
     virtual EntityType getType() override { return PLAYER; }
 
     void addToWorld() override;
+
+    void sendCreationMessage();
+
+    AresProtocol::AresMessage getCreationMessage();
 };

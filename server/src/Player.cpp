@@ -3,12 +3,25 @@
 //
 
 #include "Player.h"
+#include "Server.h"
 
 Player::Player(unsigned int m_id, const std::string &m_name, std::shared_ptr<Client> client) : Entity(m_id, m_name), client(client) {
 
 }
 
 void Player::addToWorld() {
+    sendCreationMessage();
+    m_reflectors.markAsClean();
+}
+
+void Player::sendCreationMessage() {
+    AresProtocol::AresMessage addMessage = getCreationMessage();
+    client->sendPacket(addMessage);
+    addMessage.mutable_modifyobject()->mutable_create()->set_myself(false);
+    Server::getInstance().broadcast(addMessage, client);
+}
+
+AresProtocol::AresMessage Player::getCreationMessage() {
     AresProtocol::AresMessage addMessage;
     AresProtocol::ModifyObject *modifyObject = addMessage.mutable_modifyobject();
 
@@ -26,20 +39,19 @@ void Player::addToWorld() {
         pktReflector->set_key(reflectorValue.first);
 
         switch (reflectorValue.second.get_value_type()) {
-            case ValueType::BOOLEAN :
+            case BOOLEAN :
                 pktReflector->set_boolean(reflectorValue.second.get_value_boolean());
                 break;
-            case ValueType::NUMBER :
+            case NUMBER :
                 pktReflector->set_number(reflectorValue.second.get_value_number());
                 break;
-            case ValueType::STRING :
+            case STRING :
                 pktReflector->set_string(reflectorValue.second.get_value_str());
                 break;
             default:
                 continue;
         }
     }
-
-    client->sendPacket(addMessage);
+    return addMessage;
 }
 
