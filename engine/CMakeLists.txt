@@ -3,7 +3,9 @@ set(source_engine src/Entity.cpp src/Entity.h
         src/Tilemap.cpp src/Tilemap.h src/MathUtil.h
         src/AnimatedSprite.cpp src/AnimatedSprite.h
         src/SpriteAnimation.cpp src/SpriteAnimation.h
-        src/AnimatedSpriteCharacter.cpp src/AnimatedSpriteCharacter.h)
+        src/AnimatedSpriteCharacter.cpp src/AnimatedSpriteCharacter.h
+        src/QuadTree.cpp src/QuadTree.h
+        src/Character.cpp src/Character.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/json)
 include_directories(${CMAKE_SOURCE_DIR}/shared/src)

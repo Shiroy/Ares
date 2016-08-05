@@ -2,42 +2,75 @@
 // Created by tdancois on 7/30/16.
 //
 
+#include <SFML/Window/Mouse.hpp>
 #include "PlayerCommands.h"
-
-PlayerCommands::PlayerCommands() : mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false),
-                                   mIsMovingRight(false) {
-}
 
 
 void PlayerCommands::handleInput(const sf::Keyboard::Key &key, const bool &isPressed) {
     switch (key) {
         case sf::Keyboard::Z:
-            mIsMovingUp = isPressed;
+            movingUp = isPressed;
             break;
         case sf::Keyboard::S:
-            mIsMovingDown = isPressed;
+            movingDown = isPressed;
             break;
         case sf::Keyboard::Q:
-            mIsMovingLeft = isPressed;
+            movingLeft = isPressed;
             break;
         case sf::Keyboard::D:
-            mIsMovingRight = isPressed;
+            movingRight = isPressed;
             break;
+        case sf::Keyboard::F1:
+            if (isPressed) quadTreeDebug = !quadTreeDebug;
     }
 }
 
-bool PlayerCommands::isMIsMovingUp() const {
-    return mIsMovingUp;
+bool PlayerCommands::isMovingUp() const {
+    return movingUp;
 }
 
-bool PlayerCommands::isMIsMovingDown() const {
-    return mIsMovingDown;
+bool PlayerCommands::isMovingDown() const {
+    return movingDown;
 }
 
-bool PlayerCommands::isMIsMovingLeft() const {
-    return mIsMovingLeft;
+bool PlayerCommands::isMovingLeft() const {
+    return movingLeft;
 }
 
-bool PlayerCommands::isMIsMovingRight() const {
-    return mIsMovingRight;
+bool PlayerCommands::isMovingRight() const {
+    return movingRight;
+}
+
+PlayerCommands::PlayerCommands() : movingUp(false), movingDown(false), movingLeft(false), movingRight(false),
+                                   quadTreeDebug(false) {}
+
+Player *PlayerCommands::getPlayer() const {
+    return player;
+}
+
+void PlayerCommands::setPlayer(Player *player) {
+    PlayerCommands::player = player;
+}
+
+void PlayerCommands::updatePlayer(sf::Time deltaTime) {
+    sf::Vector2f movement(0.f, 0.f);
+    if (movingUp)
+        movement.y -= player->getSpeed();
+    if (movingDown)
+        movement.y += player->getSpeed();
+    if (movingLeft)
+        movement.x -= player->getSpeed();
+    if (movingRight)
+        movement.x += player->getSpeed();
+    player->move(movement * deltaTime.asSeconds());
+
+    if (movement.x > 0.f) player->play("right");
+    if (movement.x < 0.f) player->play("left");
+    if (movement.y > 0.f) player->play("down");
+    if (movement.y < 0.f) player->play("up");
+    if (movement.x == 0.f && movement.y == 0.f) player->stop();
+}
+
+bool PlayerCommands::isQuadTreeDebug() const {
+    return quadTreeDebug;
 }

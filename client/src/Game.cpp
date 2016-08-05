@@ -4,16 +4,33 @@
 
 #include "Game.h"
 #include <MathUtil.h>
+#include <iostream>
 #include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player = Player();
     player.setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_player.png"));
-    player.setTextureRect(sf::IntRect(0, 128, 64, 64));
     player.setPosition(100.f, 100.f);
-    player.setSpeed(100.f);
+    player.setSpeed(1000.f);
+
+    playerCommands.setPlayer(&player);
 
     map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
+
+    unsigned int quadsize = std::max(map.getMapSize().x, map.getMapSize().y);
+    quadTree.setShape(0, 0, quadsize, quadsize);
+    quadTree.setNodeCapacity(10);
+
+    quadTree.insert(&player);
+
+    std::srand(std::time(0));
+    for (unsigned int i = 1; i < 200; i++) {
+        Character *character = new Character();
+        character->setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_foe.png"));
+        character->setPosition(std::rand() % quadsize, std::rand() % quadsize);
+        chars.push_back(*character);
+        quadTree.insert(character);
+    }
 }
 
 void Game::run() {
@@ -48,6 +65,16 @@ void Game::processEvents() {
             case sf::Event::KeyReleased:
                 playerCommands.handleInput(event.key.code, false);
                 break;
+            case sf::Event::MouseButtonPressed:
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    auto nodes = quadTree.getNodesAt(
+                            mWindow.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+                    if (nodes.size() > 0) {
+                        Character *c = dynamic_cast<Character *>(nodes.back());
+                        player.setTarget(c);
+                    }
+                }
+                break;
             case sf::Event::Closed:
                 mWindow.close();
                 break;
@@ -56,39 +83,25 @@ void Game::processEvents() {
 }
 
 void Game::update(sf::Time deltaTime) {
-
     player.update(deltaTime);
 
-    sf::Vector2f movement(0.f, 0.f);
-    if (playerCommands.isMIsMovingUp())
-        movement.y -= 1;
-    if (playerCommands.isMIsMovingDown())
-        movement.y += 1;
-    if (playerCommands.isMIsMovingLeft())
-        movement.x -= 1;
-    if (playerCommands.isMIsMovingRight())
-        movement.x += 1;
-
-    if(movement != sf::Vector2f(0.0f, 0.0f)) {
-        normalize(movement);
-        movement *= player.getSpeed();
-        player.move(movement * deltaTime.asSeconds());
-    }
-
-    if (movement.x > 0.f) player.play("right");
-    if (movement.x < 0.f) player.play("left");
-    if (movement.y > 0.f) player.play("down");
-    if (movement.y < 0.f) player.play("up");
-    if (movement.x == 0.f && movement.y == 0.f) player.stop();
+    playerCommands.updatePlayer(deltaTime);
 }
 void Game::render() {
-
     sf::View viewport = calculateViewport();
     mWindow.setView(viewport);
 
     mWindow.clear();
     mWindow.draw(map);
     mWindow.draw(player);
+    player.drawTarget(mWindow);
+    for (auto character: chars) {
+        mWindow.draw(character);
+    }
+
+    quadTree.forceUpdate();
+    if (playerCommands.isQuadTreeDebug()) mWindow.draw(quadTree);
+
     mWindow.display();
 }
 

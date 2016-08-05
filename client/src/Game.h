@@ -11,12 +11,15 @@
 #include "PlayerCommands.h"
 #include "NetworkThread.h"
 #include <Tilemap.h>
+#include <QuadTree.h>
 
 
 class Game {
     sf::RenderWindow mWindow;
     Player player;
     PlayerCommands playerCommands;
+    QuadTree quadTree;
+    std::list<Entity> chars;
 public:
     Game();
 
