@@ -2,10 +2,10 @@
 #include "EntityManager.h"
 
 #include <thread>
+#include <chrono>
 #include <csignal>
 #include <iostream>
 #include <SFML/System/Clock.hpp>
-#include <unistd.h>
 
 #include "Player.h"
 
@@ -52,8 +52,8 @@ void Server::run() {
 
         int sleeping_time = MINIMUM_DT - dt_clock.restart().asMilliseconds();
 
-        if (sleeping_time > 0) {
-            usleep(sf::milliseconds(sleeping_time).asMicroseconds());
+        if(sleeping_time > 0) {
+           std::this_thread::sleep_for(std::chrono::milliseconds(sleeping_time));
         }
     }
 
