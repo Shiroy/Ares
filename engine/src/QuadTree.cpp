@@ -12,7 +12,7 @@ QuadTree::QuadTree(const unsigned int &x,
                    const unsigned int &height,
                    const unsigned int &node_capacity_,
                    const unsigned int &level_) :
-        node_capacity(node_capacity_),
+        nodeCapacity(node_capacity_),
         level(level_),
         isSplit(false) {
 
@@ -44,6 +44,7 @@ bool QuadTree::split() {
     if (isSplit) return true;
 
     if (level == maxLevel || nodes.size() < node_capacity) return false;
+    if (level == maxLevel || nodes.size() < nodeCapacity) return false;
 
     unsigned int subLevel = level + 1;
 
@@ -56,22 +57,38 @@ bool QuadTree::split() {
                                                        parentY,
                                                        subWidth,
                                                        subHeight,
+<<<<<<< HEAD
                                                        node_capacity, subLevel));
+=======
+                                                       nodeCapacity, subLevel));
+>>>>>>> remotes/origin/master
     northEast = std::unique_ptr<QuadTree>(new QuadTree(parentX + subWidth,
                                                        parentY,
                                                        subWidth,
                                                        subHeight,
+<<<<<<< HEAD
                                                        node_capacity, subLevel));
+=======
+                                                       nodeCapacity, subLevel));
+>>>>>>> remotes/origin/master
     southWest = std::unique_ptr<QuadTree>(new QuadTree(parentX,
                              parentY + subHeight,
                                                        subWidth,
                                                        subHeight,
+<<<<<<< HEAD
                                                        node_capacity, subLevel));
+=======
+                                                       nodeCapacity, subLevel));
+>>>>>>> remotes/origin/master
     southEast = std::unique_ptr<QuadTree>(new QuadTree(parentX + subWidth,
                              parentY + subHeight,
                                                        subWidth,
                                                        subHeight,
+<<<<<<< HEAD
                                                        node_capacity, subLevel));
+=======
+                                                       nodeCapacity, subLevel));
+>>>>>>> remotes/origin/master
 
     isSplit = true;
 
@@ -94,7 +111,7 @@ unsigned int QuadTree::nodes_size() const {
 }
 
 bool QuadTree::isSplitUseful() const {
-    return nodes_size() > node_capacity;
+    return nodes_size() > nodeCapacity;
 }
 
 std::list<sf::Sprite *> QuadTree::getNodesAt(const int &x, const int &y) {
@@ -182,8 +199,8 @@ void QuadTree::setShape(const unsigned int &x, const unsigned int &y, const unsi
     shape.setSize(size);
 }
 
-void QuadTree::setNode_capacity(unsigned int n) {
-    QuadTree::node_capacity = n;
+void QuadTree::setNodeCapacity(unsigned int n) {
+    QuadTree::nodeCapacity = n;
 }
 
 bool QuadTree::optimize() {

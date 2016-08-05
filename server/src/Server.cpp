@@ -4,8 +4,12 @@
 #include <thread>
 #include <csignal>
 #include <iostream>
+#include <SFML/System/Clock.hpp>
+#include <unistd.h>
 
 #include "Player.h"
+
+#define MINIMUM_DT 32 //milliseconds
 
 bool stop = false;
 
@@ -19,6 +23,8 @@ Server::Server() {
 
 void Server::run() {
     std::thread listenerThread(std::bind(&Listener_Thread::run, std::ref(m_listenerThread)));
+
+    sf::Clock dt_clock;
 
     while(!stop) {
         while(m_listenerThread.getSessionToAdd().size() > 0) {
@@ -42,6 +48,12 @@ void Server::run() {
 
         for(auto session: m_all_client) {
             session->update();
+        }
+
+        int sleeping_time = MINIMUM_DT - dt_clock.restart().asMilliseconds();
+
+        if(sleeping_time > 0){
+            usleep(sf::milliseconds(sleeping_time).asMicroseconds());
         }
     }
 

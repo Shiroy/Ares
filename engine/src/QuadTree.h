@@ -16,7 +16,7 @@ class QuadTree : public sf::Drawable {
     static const unsigned int maxLevel = 15;
     unsigned int level;
 
-    unsigned int node_capacity;
+    unsigned int nodeCapacity;
 
     std::list<sf::Sprite *> nodes;
 
@@ -39,7 +39,7 @@ public:
              const unsigned int &node_capacity_ = 5,
              const unsigned int &level_ = 0);
 
-    void setNode_capacity(unsigned int n);
+    void setNodeCapacity(unsigned int n);
 
     void setShape(const unsigned int &x,
                   const unsigned int &y,

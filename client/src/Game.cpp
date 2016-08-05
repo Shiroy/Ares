@@ -4,7 +4,6 @@
 
 #include "Game.h"
 #include <MathUtil.h>
-#include <iostream>
 #include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
@@ -14,6 +13,10 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     player.lock()->setSpeed(100.f);
 
     playerCommands.setPlayer(player);
+    mWindow.setVerticalSyncEnabled(true);
+
+
+    playerCommands.setPlayer(&player);
 
     map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
 
@@ -30,7 +33,7 @@ void Game::run() {
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
 
-        while (networkThread.getReceptionQueue().size() > 0) {
+        while(networkThread.getReceptionQueue().size() > 0){
             handlePacket(networkThread.getReceptionQueue().front());
             networkThread.getReceptionQueue().pop();
         }
@@ -111,7 +114,7 @@ sf::View Game::calculateViewport() {
 }
 
 void Game::handlePacket(const AresProtocol::AresMessage &message) {
-    switch (message.message_case()) {
+    switch (message.message_case()){
         case AresProtocol::AresMessage::kModifyObject:
             handleMsgModifyObject(message.modifyobject());
             break;
