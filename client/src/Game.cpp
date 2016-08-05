@@ -7,6 +7,7 @@
 #include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
+    mWindow.setVerticalSyncEnabled(true);
     player = Player();
     player.setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_player.png"));
     player.setTextureRect(sf::IntRect(0, 128, 64, 64));
