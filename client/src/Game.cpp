@@ -7,22 +7,14 @@
 #include <thread>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
-    entityManager = EntityManager::getInstance();
-    entityManager->addNewPlayer(0, "assets/img/char_64_64_player.png");
-    player = entityManager->getPlayer();
-    player.lock()->setSpeed(100.f);
-
-    playerCommands.setPlayer(player);
     mWindow.setVerticalSyncEnabled(true);
-
-
-    playerCommands.setPlayer(&player);
 
     map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
 
-    unsigned int quadsize = std::max(map.getMapSize().x, map.getMapSize().y);
-    quadTree.setShape(0, 0, quadsize, quadsize);
-    quadTree.setNode_capacity(10);
+    entityManager = EntityManager::getInstance();
+
+    quadTree.setShape(0, 0, map.getMapSize().x, map.getMapSize().y);
+    quadTree.setNodeCapacity(10);
 }
 
 void Game::run() {
@@ -33,7 +25,7 @@ void Game::run() {
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
 
-        while(networkThread.getReceptionQueue().size() > 0){
+        while (networkThread.getReceptionQueue().size() > 0) {
             handlePacket(networkThread.getReceptionQueue().front());
             networkThread.getReceptionQueue().pop();
         }
@@ -62,7 +54,8 @@ void Game::processEvents() {
                     auto nodes = quadTree.getNodesAt(
                             mWindow.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
                     if (nodes.size() > 0) {
-                        Character *c = dynamic_cast<Character *>(nodes.back());
+                        auto shared_c = nodes.back().lock();
+                        Character *c = dynamic_cast<Character *>(shared_c.get());
                         if (!player.expired()) player.lock()->setTarget(c);
                     }
                 }
@@ -114,7 +107,7 @@ sf::View Game::calculateViewport() {
 }
 
 void Game::handlePacket(const AresProtocol::AresMessage &message) {
-    switch (message.message_case()){
+    switch (message.message_case()) {
         case AresProtocol::AresMessage::kModifyObject:
             handleMsgModifyObject(message.modifyobject());
             break;
@@ -122,7 +115,19 @@ void Game::handlePacket(const AresProtocol::AresMessage &message) {
             break;
     }
 }
-
 void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
-    //To be filled
+    if (modifyObject.action_case() == modifyObject.kCreate) {
+        auto object = modifyObject.create();
+        if (object.type() == AresProtocol::ModifyObject::CreateObject::PLAYER) {
+            entityManager->addNewPlayer(modifyObject.id(), "assets/img/char_64_64_player.png");
+
+            player = entityManager->getPlayer();
+            player.lock()->setSpeed(100.f);
+            player.lock()->setPosition(object.position().x(), object.position().y());
+
+            playerCommands.setPlayer(player);
+
+            quadTree.insert(player);
+        }
+    }
 }

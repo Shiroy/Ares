@@ -12,13 +12,15 @@
 #include <list>
 #include <memory>
 
+using SpriteList = std::list<std::weak_ptr<sf::Sprite>>;
+
 class QuadTree : public sf::Drawable {
     static const unsigned int maxLevel = 15;
     unsigned int level;
 
     unsigned int nodeCapacity;
 
-    std::list<sf::Sprite *> nodes;
+    SpriteList nodes;
 
     bool isSplit;
 
@@ -48,13 +50,15 @@ public:
 
     void setShape(const sf::RectangleShape &shape);
 
-    bool contains(const std::unique_ptr<QuadTree> &child, const sf::Sprite *sprite);
+    bool contains(const std::unique_ptr<QuadTree> &child, std::weak_ptr<sf::Sprite> sprite);
 
-    void insert(sf::Sprite *node);
+    void insert(std::weak_ptr<sf::Sprite> node);
 
     bool split();
 
     bool unsplit();
+
+    void mergeSplitNodes();
 
     bool optimize();
 
@@ -62,9 +66,9 @@ public:
 
     bool isSplitUseful() const;
 
-    std::list<sf::Sprite *> getNodesAt(const int &x, const int &y);
+    SpriteList getNodesAt(const int &x, const int &y);
 
-    std::list<sf::Sprite *> getNodesAt(const sf::Vector2f pos);
+    SpriteList getNodesAt(const sf::Vector2f pos);
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 

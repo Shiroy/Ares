@@ -2,9 +2,13 @@
 // Created by tdancois on 7/31/16.
 //
 
+#include "QuadTree.h"
 #include <SFML/Graphics/Text.hpp>
 #include <sstream>
-#include "QuadTree.h"
+
+auto comparator = [](const std::weak_ptr<sf::Sprite> a, const std::weak_ptr<sf::Sprite> b){
+    return a.owner_before(b);
+};
 
 QuadTree::QuadTree(const unsigned int &x,
                    const unsigned int &y,
@@ -27,7 +31,7 @@ QuadTree::QuadTree(const unsigned int &x,
 }
 
 
-void QuadTree::insert(sf::Sprite *node) {
+void QuadTree::insert(std::weak_ptr<sf::Sprite> node) {
     if (split()) {
         if (contains(northWest, node)) northWest->insert(node);
         else if (contains(northEast, node)) northEast->insert(node);
@@ -42,8 +46,6 @@ void QuadTree::insert(sf::Sprite *node) {
 
 bool QuadTree::split() {
     if (isSplit) return true;
-
-    if (level == maxLevel || nodes.size() < node_capacity) return false;
     if (level == maxLevel || nodes.size() < nodeCapacity) return false;
 
     unsigned int subLevel = level + 1;
@@ -57,47 +59,31 @@ bool QuadTree::split() {
                                                        parentY,
                                                        subWidth,
                                                        subHeight,
-<<<<<<< HEAD
-                                                       node_capacity, subLevel));
-=======
                                                        nodeCapacity, subLevel));
->>>>>>> remotes/origin/master
     northEast = std::unique_ptr<QuadTree>(new QuadTree(parentX + subWidth,
                                                        parentY,
                                                        subWidth,
                                                        subHeight,
-<<<<<<< HEAD
-                                                       node_capacity, subLevel));
-=======
                                                        nodeCapacity, subLevel));
->>>>>>> remotes/origin/master
     southWest = std::unique_ptr<QuadTree>(new QuadTree(parentX,
-                             parentY + subHeight,
+                                                       parentY + subHeight,
                                                        subWidth,
                                                        subHeight,
-<<<<<<< HEAD
-                                                       node_capacity, subLevel));
-=======
                                                        nodeCapacity, subLevel));
->>>>>>> remotes/origin/master
     southEast = std::unique_ptr<QuadTree>(new QuadTree(parentX + subWidth,
-                             parentY + subHeight,
+                                                       parentY + subHeight,
                                                        subWidth,
                                                        subHeight,
-<<<<<<< HEAD
-                                                       node_capacity, subLevel));
-=======
                                                        nodeCapacity, subLevel));
->>>>>>> remotes/origin/master
 
     isSplit = true;
 
-    std::list<sf::Sprite *> old_nodes = nodes;
+    SpriteList old_nodes = nodes;
     nodes.clear();
     for (auto node: old_nodes) {
         insert(node);
     }
-    
+
     return true;
 }
 
@@ -114,21 +100,21 @@ bool QuadTree::isSplitUseful() const {
     return nodes_size() > nodeCapacity;
 }
 
-std::list<sf::Sprite *> QuadTree::getNodesAt(const int &x, const int &y) {
-    std::list<sf::Sprite *> nodesAt;
+SpriteList QuadTree::getNodesAt(const int &x, const int &y) {
+    SpriteList nodesAt;
     if (isSplit) {
-        if (northWest->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(northWest->getNodesAt(x, y));
-        if (northEast->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(northEast->getNodesAt(x, y));
-        if (southWest->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(southWest->getNodesAt(x, y));
-        if (southEast->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(southEast->getNodesAt(x, y));
+        if (northWest->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(northWest->getNodesAt(x, y), comparator);
+        if (northEast->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(northEast->getNodesAt(x, y), comparator);
+        if (southWest->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(southWest->getNodesAt(x, y), comparator);
+        if (southEast->shape.getGlobalBounds().contains(x, y)) nodesAt.merge(southEast->getNodesAt(x, y), comparator);
     }
     for (auto node: nodes) {
-        if (node->getGlobalBounds().contains(x, y)) nodesAt.push_back(node);
+        if (node.lock()->getGlobalBounds().contains(x, y)) nodesAt.push_back(node);
     }
     return nodesAt;
 }
 
-std::list<sf::Sprite *> QuadTree::getNodesAt(const sf::Vector2f pos) {
+SpriteList QuadTree::getNodesAt(const sf::Vector2f pos) {
     return getNodesAt(pos.x, pos.y);
 }
 
@@ -170,16 +156,16 @@ void QuadTree::draw(sf::RenderTarget &target, sf::RenderStates states) const {
         target.draw(text);
     }
     for (auto node: nodes) {
-        sf::RectangleShape rshap(sf::Vector2f(node->getGlobalBounds().width, node->getGlobalBounds().height));
-        rshap.setPosition(node->getPosition());
+        sf::RectangleShape rshap(sf::Vector2f(node.lock()->getGlobalBounds().width, node.lock()->getGlobalBounds().height));
+        rshap.setPosition(node.lock()->getPosition());
         rshap.setFillColor(sf::Color(255, (level + 1) * 50 % 255, 0));
         target.draw(rshap);
     }
 }
 
-bool QuadTree::contains(const std::unique_ptr<QuadTree> &child, const sf::Sprite *sprite) {
+bool QuadTree::contains(const std::unique_ptr<QuadTree> &child, std::weak_ptr<sf::Sprite> sprite) {
     sf::FloatRect container = child->shape.getGlobalBounds();
-    sf::FloatRect node = sprite->getGlobalBounds();
+    sf::FloatRect node = sprite.lock()->getGlobalBounds();
 
     return node.top > container.top &&
            node.left > container.left &&
@@ -214,16 +200,22 @@ bool QuadTree::unsplit() {
     northWest->unsplit();
     southEast->unsplit();
     southWest->unsplit();
-    nodes.merge(northEast->nodes);
-    nodes.merge(northWest->nodes);
-    nodes.merge(southEast->nodes);
-    nodes.merge(southWest->nodes);
+    mergeSplitNodes();
     northEast.reset();
     northWest.reset();
     southEast.reset();
     southWest.reset();
     isSplit = false;
     return true;
+}
+
+void QuadTree::mergeSplitNodes() {
+    nodes.splice(nodes.begin(), southWest->nodes);
+    nodes.splice(nodes.begin(), northWest->nodes);
+    nodes.splice(nodes.begin(), southEast->nodes);
+    nodes.splice(nodes.begin(), southWest->nodes);
+//    uncomment following to force uniqueness (perfomance cost)
+//    nodes.unique(comparator);
 }
 
 void QuadTree::clear() {
@@ -239,7 +231,7 @@ void QuadTree::clear() {
 
 void QuadTree::forceUpdate() {
     unsplit();
-    std::list<sf::Sprite *> nodes_to_reinsert = nodes;
+    SpriteList nodes_to_reinsert = nodes;
     nodes.clear();
     for (auto node: nodes_to_reinsert) {
         insert(node);

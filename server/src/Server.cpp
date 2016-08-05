@@ -52,7 +52,7 @@ void Server::run() {
 
         int sleeping_time = MINIMUM_DT - dt_clock.restart().asMilliseconds();
 
-        if(sleeping_time > 0){
+        if (sleeping_time > 0) {
             usleep(sf::milliseconds(sleeping_time).asMicroseconds());
         }
     }

@@ -26,15 +26,21 @@ class EntityManager {
 public:
     static EntityManager *getInstance();
 
-    bool addNewPlayer(const unsigned int &id, const std::string &character_texture);
+    void addNewPlayer(const unsigned int &id, const std::string &character_texture);
 
-    bool setPlayer(const unsigned int &id);
+    void addNewCharacter(const unsigned int &id, const std::string &character_texture);
+
+    void setPlayer(const unsigned int &id);
+
+    std::weak_ptr<Entity> getEntity(const unsigned int &id);
 
     std::weak_ptr<Player> getPlayer();
 
-    bool removeEntity(const unsigned int &id);
+    void removeEntity(const unsigned int &id);
 
     void draw(sf::RenderTarget &canvas) const;
+
+    unsigned long size() const;
 };
 
 
