@@ -18,8 +18,6 @@
 class Game {
     sf::RenderWindow mWindow;
 
-    EntityManager *entityManager;
-
     QuadTree quadTree;
 
     std::weak_ptr<Player> player;

@@ -6,22 +6,20 @@
 #include "TextureManager.h"
 #include "AresException.h"
 
-EntityManager *EntityManager::instance;
-
 EntityManager::EntityManager() : isPlayerSet(false) {}
 
-EntityManager *EntityManager::getInstance() {
-    if (!instance) instance = new EntityManager();
+EntityManager & EntityManager::getInstance() {
+    static EntityManager instance;
     return instance;
 }
 
 void EntityManager::addNewPlayer(const unsigned int &id, const std::string &character_texture) {
     if (isPlayerSet) throw new EntityManagerException("addNewPlayer", "A player is already set");
-    if (entities.count(id) != 0) throw new EntityManagerException("addNewPlayer", "A player is already set");
+    if (entities.count(id) != 0) throw new EntityManagerException("addNewPlayer", "ID already used");
 
     entities[id].reset(new Player());
     entities[id].get()->setTexture(TextureManager::getInstance().getTexture(character_texture));
-    AnimatedSpritesUpdater::getInstance()->insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
+    AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 
     setPlayer(id);
 }
@@ -31,7 +29,7 @@ void EntityManager::addNewCharacter(const unsigned int &id, const std::string &c
 
     entities[id].reset(new Character());
     entities[id].get()->setTexture(TextureManager::getInstance().getTexture(character_texture));
-    AnimatedSpritesUpdater::getInstance()->insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
+    AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 }
 
 

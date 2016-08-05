@@ -16,15 +16,13 @@
 
 class EntityManager {
 //    singleton
-    static EntityManager *instance;
-
     EntityManager();
 
     std::map<unsigned int, std::shared_ptr<Entity>> entities;
     unsigned int player_id;
     bool isPlayerSet;
 public:
-    static EntityManager *getInstance();
+    static EntityManager & getInstance();
 
     void addNewPlayer(const unsigned int &id, const std::string &character_texture);
 

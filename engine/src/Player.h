@@ -7,18 +7,19 @@
 
 #include "Character.h"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <memory>
 
 class Player : public Character {
     float speed;
-    Character *target;
+    std::weak_ptr<Entity> target;
 public:
     float getSpeed() const;
 
     void setSpeed(float speed);
 
-    const Character *getTarget() const;
+    const std::weak_ptr<Entity> getTarget() const;
 
-    void setTarget(Character *target);
+    void setTarget(const std::weak_ptr<Entity> &target);
 
     void drawTarget(sf::RenderTarget &canvas) const;
 };

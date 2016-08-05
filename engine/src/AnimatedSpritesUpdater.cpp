@@ -4,12 +4,10 @@
 
 #include "AnimatedSpritesUpdater.h"
 
-AnimatedSpritesUpdater *AnimatedSpritesUpdater::instance;
-
 AnimatedSpritesUpdater::AnimatedSpritesUpdater() {}
 
-AnimatedSpritesUpdater *AnimatedSpritesUpdater::getInstance() {
-    if (!instance) instance = new AnimatedSpritesUpdater;
+AnimatedSpritesUpdater & AnimatedSpritesUpdater::getInstance() {
+    static AnimatedSpritesUpdater instance;
     return instance;
 }
 

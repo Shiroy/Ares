@@ -3,15 +3,13 @@
 //
 
 #include "Game.h"
-#include <MathUtil.h>
 #include <thread>
+#include <MathUtil.h>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     mWindow.setVerticalSyncEnabled(true);
 
     map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
-
-    entityManager = EntityManager::getInstance();
 
     quadTree.setShape(0, 0, map.getMapSize().x, map.getMapSize().y);
     quadTree.setNodeCapacity(10);
@@ -55,8 +53,7 @@ void Game::processEvents() {
                             mWindow.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
                     if (nodes.size() > 0) {
                         auto shared_c = nodes.back().lock();
-                        Character *c = dynamic_cast<Character *>(shared_c.get());
-                        if (!player.expired()) player.lock()->setTarget(c);
+                        if (!player.expired()) player.lock()->setTarget(std::dynamic_pointer_cast<Entity>(shared_c));
                     }
                 }
                 break;
@@ -82,7 +79,7 @@ void Game::render() {
     mWindow.clear();
     mWindow.draw(map);
 
-    entityManager->draw(mWindow);
+    EntityManager::getInstance().draw(mWindow);
 
     if (!player.expired()) {
         player.lock()->drawTarget(mWindow);
@@ -116,18 +113,25 @@ void Game::handlePacket(const AresProtocol::AresMessage &message) {
     }
 }
 void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
-    if (modifyObject.action_case() == modifyObject.kCreate) {
-        auto object = modifyObject.create();
-        if (object.type() == AresProtocol::ModifyObject::CreateObject::PLAYER) {
-            entityManager->addNewPlayer(modifyObject.id(), "assets/img/char_64_64_player.png");
+    switch (modifyObject.action_case()) {
+        case AresProtocol::ModifyObject::kCreate:
+            auto object = modifyObject.create();
+            switch (object.type()) {
+                case AresProtocol::ModifyObject::CreateObject::PLAYER:
+                    EntityManager::getInstance().addNewPlayer(modifyObject.id(), "assets/img/char_64_64_player.png");
 
-            player = entityManager->getPlayer();
-            player.lock()->setSpeed(100.f);
-            player.lock()->setPosition(object.position().x(), object.position().y());
+                    player = EntityManager::getInstance().getPlayer();
 
-            playerCommands.setPlayer(player);
+                    auto shared_player = player.lock();
 
-            quadTree.insert(player);
-        }
+                    shared_player->setSpeed(100.f);
+                    shared_player->setPosition(object.position().x(), object.position().y());
+
+                    playerCommands.setPlayer(shared_player);
+
+                    quadTree.insert(shared_player);
+                    break;
+            }
+            break;
     }
 }

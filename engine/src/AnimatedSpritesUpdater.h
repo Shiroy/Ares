@@ -14,11 +14,9 @@ class AnimatedSpritesUpdater {
     // singleton
     AnimatedSpritesUpdater();
 
-    static AnimatedSpritesUpdater *instance;
-
     std::list<std::weak_ptr<AnimatedSprite>> sprites;
 public:
-    static AnimatedSpritesUpdater *getInstance();
+    static AnimatedSpritesUpdater & getInstance();
 
     void insert(std::weak_ptr<AnimatedSprite> sprite);
 
