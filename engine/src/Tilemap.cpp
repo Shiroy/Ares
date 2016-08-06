@@ -22,8 +22,8 @@ void Tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
     sf::IntRect viewport = target.getViewport(target.getView());
 
-    viewport.left = static_cast<int>(target.getView().getCenter().x - viewport.width/2);
-    viewport.top = static_cast<int>(target.getView().getCenter().y - viewport.height/2);
+    viewport.left = static_cast<int>(target.getView().getCenter().x - viewport.width / 2);
+    viewport.top = static_cast<int>(target.getView().getCenter().y - viewport.height / 2);
 
     std::vector<sf::Vertex> vertexArray;
     vertexArray.reserve((static_cast<int>(viewport.width) / tile_width) * (static_cast<int>(viewport.height) / tile_height));

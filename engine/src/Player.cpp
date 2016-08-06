@@ -18,18 +18,21 @@ void Player::setSpeed(float speed) {
     }
 }
 
-const Character *Player::getTarget() const {
+
+const std::weak_ptr<Entity> Player::getTarget() const {
     return target;
 }
 
-void Player::setTarget(Character *target) {
+void Player::setTarget(const std::weak_ptr<Entity> &target) {
     Player::target = target;
 }
 
+
 void Player::drawTarget(sf::RenderTarget &canvas) const {
-    if (target) {
-        sf::RectangleShape rshap(sf::Vector2f(target->getGlobalBounds().width, target->getGlobalBounds().height));
-        rshap.setPosition(target->getPosition());
+    if (target.lock()) {
+        sf::RectangleShape rshap(
+                sf::Vector2f(target.lock()->getGlobalBounds().width, target.lock()->getGlobalBounds().height));
+        rshap.setPosition(target.lock()->getPosition());
         rshap.setFillColor(sf::Color::Transparent);
         rshap.setOutlineColor(sf::Color::Red);
         rshap.setOutlineThickness(2);
@@ -41,18 +44,15 @@ void Player::drawTarget(sf::RenderTarget &canvas) const {
         }
 
         sf::Text text;
-        text.setString(target->getName());
+        text.setString(target.lock()->getName());
         text.setFont(font);
         text.setCharacterSize(18);
         text.setColor(sf::Color::Red);
-        text.setPosition(target->getGlobalBounds().left + target->getGlobalBounds().width + 4,
-                         target->getGlobalBounds().top + target->getGlobalBounds().height / 2);
+        text.setPosition(target.lock()->getGlobalBounds().left + target.lock()->getGlobalBounds().width + 4,
+                         target.lock()->getGlobalBounds().top + target.lock()->getGlobalBounds().height / 2);
         canvas.draw(text);
     }
 }
-
-
-
 
 
 

@@ -3,8 +3,8 @@
 //
 
 #include <SFML/Window/Mouse.hpp>
+#include <MathUtil.h>
 #include "PlayerCommands.h"
-
 
 void PlayerCommands::handleInput(const sf::Keyboard::Key &key, const bool &isPressed) {
     switch (key) {
@@ -44,31 +44,39 @@ bool PlayerCommands::isMovingRight() const {
 PlayerCommands::PlayerCommands() : movingUp(false), movingDown(false), movingLeft(false), movingRight(false),
                                    quadTreeDebug(false) {}
 
-Player *PlayerCommands::getPlayer() const {
+const std::weak_ptr<Player> &PlayerCommands::getPlayer() const {
     return player;
 }
 
-void PlayerCommands::setPlayer(Player *player) {
+void PlayerCommands::setPlayer(const std::weak_ptr<Player> &player) {
     PlayerCommands::player = player;
 }
 
 void PlayerCommands::updatePlayer(sf::Time deltaTime) {
+    auto playerShptr = player.lock();
+    playerShptr->update(deltaTime);
+
     sf::Vector2f movement(0.f, 0.f);
     if (movingUp)
-        movement.y -= player->getSpeed();
+        movement.y -= 1;
     if (movingDown)
-        movement.y += player->getSpeed();
+        movement.y += 1;
     if (movingLeft)
-        movement.x -= player->getSpeed();
+        movement.x -= 1;
     if (movingRight)
-        movement.x += player->getSpeed();
-    player->move(movement * deltaTime.asSeconds());
+        movement.x += 1;
 
-    if (movement.x > 0.f) player->play("right");
-    if (movement.x < 0.f) player->play("left");
-    if (movement.y > 0.f) player->play("down");
-    if (movement.y < 0.f) player->play("up");
-    if (movement.x == 0.f && movement.y == 0.f) player->stop();
+    if (movement != sf::Vector2f(0.0f, 0.0f)) {
+        normalize(movement);
+        movement *= playerShptr->getSpeed();
+        playerShptr->move(movement * deltaTime.asSeconds());
+    }
+
+    if (movement.x > 0.f) playerShptr->play("right");
+    if (movement.x < 0.f) playerShptr->play("left");
+    if (movement.y > 0.f) playerShptr->play("down");
+    if (movement.y < 0.f) playerShptr->play("up");
+    if (movement.x == 0.f && movement.y == 0.f) playerShptr->stop();
 }
 
 bool PlayerCommands::isQuadTreeDebug() const {

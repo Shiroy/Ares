@@ -3,6 +3,7 @@
 //
 
 #include "AnimatedSprite.h"
+#include "AnimatedSpritesUpdater.h"
 
 void AnimatedSprite::update(sf::Time dt) {
     if (playing) {

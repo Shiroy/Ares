@@ -3,35 +3,16 @@
 //
 
 #include "Game.h"
-#include <MathUtil.h>
-#include <iostream>
 #include <thread>
+#include <MathUtil.h>
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
     mWindow.setVerticalSyncEnabled(true);
-    player = Player();
-    player.setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_player.png"));
-    player.setPosition(100.f, 100.f);
-    player.setSpeed(1000.f);
-
-    playerCommands.setPlayer(&player);
 
     map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
 
-    unsigned int quadsize = std::max(map.getMapSize().x, map.getMapSize().y);
-    quadTree.setShape(0, 0, quadsize, quadsize);
+    quadTree.setShape(0, 0, map.getMapSize().x, map.getMapSize().y);
     quadTree.setNodeCapacity(10);
-
-    quadTree.insert(&player);
-
-    std::srand(std::time(0));
-    for (unsigned int i = 1; i < 200; i++) {
-        Character *character = new Character();
-        character->setTexture(TextureManager::getInstance().getTexture("assets/img/char_64_64_foe.png"));
-        character->setPosition(std::rand() % quadsize, std::rand() % quadsize);
-        chars.push_back(*character);
-        quadTree.insert(character);
-    }
 }
 
 void Game::run() {
@@ -42,7 +23,7 @@ void Game::run() {
     while (mWindow.isOpen()) {
         sf::Time deltaTime = clock.restart();
 
-        while(networkThread.getReceptionQueue().size() > 0){
+        while (networkThread.getReceptionQueue().size() > 0) {
             handlePacket(networkThread.getReceptionQueue().front());
             networkThread.getReceptionQueue().pop();
         }
@@ -71,8 +52,8 @@ void Game::processEvents() {
                     auto nodes = quadTree.getNodesAt(
                             mWindow.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
                     if (nodes.size() > 0) {
-                        Character *c = dynamic_cast<Character *>(nodes.back());
-                        player.setTarget(c);
+                        auto shared_c = nodes.back().lock();
+                        if (!player.expired()) player.lock()->setTarget(std::dynamic_pointer_cast<Entity>(shared_c));
                     }
                 }
                 break;
@@ -84,31 +65,36 @@ void Game::processEvents() {
 }
 
 void Game::update(sf::Time deltaTime) {
-    player.update(deltaTime);
-
-    playerCommands.updatePlayer(deltaTime);
+    if (!player.expired()) {
+        player.lock()->update(deltaTime);
+        playerCommands.updatePlayer(deltaTime);
+    }
 }
 void Game::render() {
-    sf::View viewport = calculateViewport();
-    mWindow.setView(viewport);
+    if (!player.expired()) {
+        sf::View viewport = calculateViewport();
+        mWindow.setView(viewport);
+    }
 
     mWindow.clear();
     mWindow.draw(map);
-    mWindow.draw(player);
-    player.drawTarget(mWindow);
-    for (auto character: chars) {
-        mWindow.draw(character);
+
+    EntityManager::getInstance().draw(mWindow);
+
+    if (!player.expired()) {
+        player.lock()->drawTarget(mWindow);
     }
 
     quadTree.forceUpdate();
+
     if (playerCommands.isQuadTreeDebug()) mWindow.draw(quadTree);
 
     mWindow.display();
 }
 
 sf::View Game::calculateViewport() {
-    float topX = player.getPosition().x - (float)mWindow.getSize().x/2.0f;
-    float topY = player.getPosition().y - (float)mWindow.getSize().y/2.0f;
+    float topX = player.lock()->getCenter().x - (float) mWindow.getSize().x / 2.0f;
+    float topY = player.lock()->getCenter().y - (float) mWindow.getSize().y / 2.0f;
 
     float maxX = static_cast<float>(map.getMapSize().x) - mWindow.getSize().x;
     float maxY = static_cast<float>(map.getMapSize().y) - mWindow.getSize().y;
@@ -118,7 +104,7 @@ sf::View Game::calculateViewport() {
 }
 
 void Game::handlePacket(const AresProtocol::AresMessage &message) {
-    switch (message.message_case()){
+    switch (message.message_case()) {
         case AresProtocol::AresMessage::kModifyObject:
             handleMsgModifyObject(message.modifyobject());
             break;
@@ -126,7 +112,26 @@ void Game::handlePacket(const AresProtocol::AresMessage &message) {
             break;
     }
 }
-
 void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
-    //To be filled
+    switch (modifyObject.action_case()) {
+        case AresProtocol::ModifyObject::kCreate:
+            auto object = modifyObject.create();
+            switch (object.type()) {
+                case AresProtocol::ModifyObject::CreateObject::PLAYER:
+                    EntityManager::getInstance().addNewPlayer(modifyObject.id(), "assets/img/char_64_64_player.png");
+
+                    player = EntityManager::getInstance().getPlayer();
+
+                    auto shared_player = player.lock();
+
+                    shared_player->setSpeed(100.f);
+                    shared_player->setPosition(object.position().x(), object.position().y());
+
+                    playerCommands.setPlayer(shared_player);
+
+                    quadTree.insert(shared_player);
+                    break;
+            }
+            break;
+    }
 }

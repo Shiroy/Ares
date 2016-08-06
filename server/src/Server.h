@@ -8,11 +8,11 @@ class Server
 {
 public:
 
-    static Server& getInstance();
+    static Server &getInstance();
 
     void run();
 
-    void broadcast(const AresProtocol::AresMessage& msg, std::shared_ptr<Client> sender, bool includeMyself = false);
+    void broadcast(const AresProtocol::AresMessage &msg, std::shared_ptr<Client> sender, bool includeMyself = false);
 
 private:
     Server();

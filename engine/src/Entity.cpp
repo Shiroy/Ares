@@ -30,3 +30,10 @@ int Entity::getHealth() const {
 void Entity::setHealth(int health) {
     Entity::health = health;
 }
+
+const sf::Vector2f Entity::getCenter() const {
+    sf::Vector2f center(getPosition());
+    center.x += getLocalBounds().width / 2;
+    center.y += getGlobalBounds().height / 2;
+    return center;
+}

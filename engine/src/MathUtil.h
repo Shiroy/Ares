@@ -13,4 +13,6 @@ T clamp(T min, T value, T max) {
     return std::max(min, std::min(value, max));
 }
 
+void normalize(sf::Vector2f &vector);
+
 #endif //ARES_MATH_UTIL_H_H

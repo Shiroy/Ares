@@ -21,7 +21,7 @@ Listener_Thread::Listener_Thread() {
 void Listener_Thread::run()
 {
     sf::TcpListener listener;
-    if(listener.listen(21194) != sf::Socket::Done) {
+    if (listener.listen(21194) != sf::Socket::Done) {
         std::cerr << "Cannot bind the listenre socket" << std::endl;
         perror("ListenerThread");
         exit(1);
@@ -38,11 +38,11 @@ void Listener_Thread::run()
     {
         bool someReady = selector.wait(sf::milliseconds(32));
 
-        if(someReady && selector.isReady(listener)){
+        if (someReady && selector.isReady(listener)) {
             auto newClient = std::make_shared<sf::TcpSocket>();
             sf::Socket::Status s = listener.accept(*newClient);
             std::cout << "Accept s: " << s << std::endl;
-            if(s == sf::Socket::Done) {
+            if (s == sf::Socket::Done) {
                 std::shared_ptr<Client> newSession(new Client());
                 m_sessionToAdd.push_back(newSession);
                 sessionStorage.push_back(std::make_tuple(newSession, newClient));
@@ -55,11 +55,11 @@ void Listener_Thread::run()
         }
 
 
-        for(auto& networkSession: sessionStorage) {
+        for (auto &networkSession: sessionStorage) {
             std::shared_ptr<sf::TcpSocket> client = std::get<1>(networkSession);
             std::shared_ptr<Client> session = std::get<0>(networkSession);
 
-            if(someReady && selector.isReady(*client)){
+            if (someReady && selector.isReady(*client)) {
                 sf::Packet newPacket;
                 sf::Socket::Status s = client->receive(newPacket);
                 std::cout << "Receive s: " << s << std::endl;
@@ -88,16 +88,16 @@ void Listener_Thread::run()
                 }
             }
 
-            LockedQueue<AresProtocol::AresMessage>& sendingQueue = session->getSendingQueue();
+            LockedQueue<AresProtocol::AresMessage> &sendingQueue = session->getSendingQueue();
             if(sendingQueue.size() > 0) {
                 auto message = sendingQueue.front();
                 sf::Packet pkt;
-                char* data = new char[message.ByteSize()];
-                if(message.SerializeToArray(data, message.ByteSize())){
+                char *data = new char[message.ByteSize()];
+                if (message.SerializeToArray(data, message.ByteSize())) {
                     pkt.append(data, message.ByteSize());
                     sf::Socket::Status s = client->send(pkt);
 
-                    if(s != sf::Socket::Done){
+                    if (s != sf::Socket::Done) {
                         std::cout << "Erreur à l'envoie d'un paquet" << std::endl;
                         perror("ListenerThread");
                     }
@@ -111,7 +111,7 @@ void Listener_Thread::run()
         }
 
         sessionStorage.remove_if([](const SessionEntry& s){
-            auto& session = std::get<0>(s);
+            auto &session = std::get<0>(s);
             return session->isToBeDeleted();
         });
     }

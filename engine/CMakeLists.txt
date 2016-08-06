@@ -5,7 +5,10 @@ set(source_engine src/Entity.cpp src/Entity.h
         src/SpriteAnimation.cpp src/SpriteAnimation.h
         src/AnimatedSpriteCharacter.cpp src/AnimatedSpriteCharacter.h
         src/QuadTree.cpp src/QuadTree.h
-        src/Character.cpp src/Character.h)
+        src/Character.cpp src/Character.h
+        src/AnimatedSpritesUpdater.cpp src/AnimatedSpritesUpdater.h
+        src/EntityManager.cpp src/EntityManager.h
+        src/Player.cpp src/Player.h src/AresException.cpp src/AresException.h src/MathUtil.cpp)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/json)
 include_directories(${CMAKE_SOURCE_DIR}/shared/src)

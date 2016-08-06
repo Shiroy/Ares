@@ -52,7 +52,7 @@ void Server::run() {
 
         int sleeping_time = MINIMUM_DT - dt_clock.restart().asMilliseconds();
 
-        if(sleeping_time > 0){
+        if (sleeping_time > 0) {
             usleep(sf::milliseconds(sleeping_time).asMicroseconds());
         }
     }
@@ -69,9 +69,9 @@ Server &Server::getInstance() {
 }
 
 void Server::broadcast(const AresProtocol::AresMessage &msg, std::shared_ptr<Client> sender, bool includeMyself) {
-    for(auto client: m_all_client) {
-        if(client == sender) {
-            if(includeMyself) {
+    for (auto client: m_all_client) {
+        if (client == sender) {
+            if (includeMyself) {
                 client->sendPacket(msg);
             }
         }
