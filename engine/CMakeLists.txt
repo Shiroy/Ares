@@ -8,7 +8,7 @@ set(source_engine src/Entity.cpp src/Entity.h
         src/Character.cpp src/Character.h
         src/AnimatedSpritesUpdater.cpp src/AnimatedSpritesUpdater.h
         src/EntityManager.cpp src/EntityManager.h
-        src/Player.cpp src/Player.h src/AresException.cpp src/AresException.h src/MathUtil.cpp)
+        src/Player.cpp src/Player.h src/AresException.cpp src/AresException.h src/MathUtil.cpp src/Scene.cpp src/Scene.h src/SceneNode.cpp src/SceneNode.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/json)
 include_directories(${CMAKE_SOURCE_DIR}/shared/src)
