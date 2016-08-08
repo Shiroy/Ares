@@ -10,6 +10,9 @@
 #include <memory>
 
 class Player : public Character {
+    float maxPower;
+    float power;
+    float scope;
     float speed;
     std::weak_ptr<Entity> target;
 public:
@@ -22,6 +25,9 @@ public:
     void setTarget(const std::weak_ptr<Entity> &target);
 
     void drawTarget(sf::RenderTarget &canvas) const;
+
+    virtual void handleReflectorUpdate(
+            const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) override;
 };
 
 

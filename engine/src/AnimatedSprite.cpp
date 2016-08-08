@@ -54,3 +54,15 @@ void AnimatedSprite::play(const std::string &name) {
 void AnimatedSprite::stop() {
     playing = false;
 }
+
+void AnimatedSprite::handleReflectorUpdate(
+        const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) {
+    Entity::handleReflectorUpdate(reflector);
+    for (auto element : reflector) {
+        if (element.key() == "animation") {
+            if (element.has_string()) {
+//                play(element.string());
+            }
+        }
+    }
+}

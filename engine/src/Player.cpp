@@ -54,6 +54,33 @@ void Player::drawTarget(sf::RenderTarget &canvas) const {
     }
 }
 
+void Player::handleReflectorUpdate(
+        const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) {
+    AnimatedSprite::handleReflectorUpdate(reflector);
+    for (auto element : reflector) {
+        if (element.key() == "maxPower") {
+            if (element.has_number()) {
+                maxPower = element.number();
+            }
+        }
+        else if (element.key() == "power") {
+            if (element.has_number()) {
+                power = element.number();
+            }
+        }
+        else if (element.key() == "scope") {
+            if (element.has_number()) {
+                scope = element.number();
+            }
+        }
+        else if (element.key() == "speed") {
+            if (element.has_number()) {
+                speed = element.number();
+            }
+        }
+    }
+}
+
 
 
 

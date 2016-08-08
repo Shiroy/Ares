@@ -20,7 +20,7 @@ void Entity::setInitialValues() {
     m_reflectors["power"] = 60.0f;
     m_reflectors["maxPower"] = 60.0f;
     m_reflectors["powerRegenRate"] = 2.0f;
-    m_reflectors["sprite"] = "img/char_64_64_player.png";
+    m_reflectors["sprite"] = "assets/img/char_64_64_player.png";
     m_reflectors["animation"] = "none";
     m_reflectors["scope"] = 230.0f;
     m_reflectors["speed"] = 300.0f;

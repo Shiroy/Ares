@@ -31,6 +31,9 @@ public:
 
     void stop();
 
+    virtual void handleReflectorUpdate(
+            const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) override;
+
 private:
     const sf::IntRect getCurrentFrameRectangle() const;
 };
