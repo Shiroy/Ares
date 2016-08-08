@@ -44,3 +44,17 @@ void Scene::updateNodes(const sf::Time &dt) {
         sceneEntities.second->update(dt);
     }
 }
+
+std::weak_ptr<TextSceneNode>
+Scene::addTextSceneNode(const std::string &text, std::weak_ptr<SceneNode> parent, const std::string &name,
+                        sf::Vector2f position) {
+    std::shared_ptr<TextSceneNode> newEntity = std::make_shared<TextSceneNode>(name, this);
+    parent.lock()->addChildSceneNode(newEntity);
+    newEntity->setPosition(position);
+
+    newEntity->setDisplayedText(text);
+
+    allEntities[name] = newEntity;
+
+    return newEntity;
+}

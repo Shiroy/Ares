@@ -10,6 +10,8 @@
 #include "Tilemap.h"
 #include "CameraSceneNode.h"
 #include "EmptySceneNode.h"
+#include "SpriteSceneNode.h"
+#include "TextSceneNode.h"
 #include <SFML/Graphics/Drawable.hpp>
 
 class SceneNode;
@@ -50,6 +52,7 @@ public:
     std::weak_ptr<SceneNode> getRootSceneNode() { return rootSceneNode; }
 
     std::weak_ptr<SpriteSceneNode> addEntitySceneNode(std::weak_ptr<SceneNode> parent, const std::string& name, sf::Vector2f position);
+    std::weak_ptr<TextSceneNode> addTextSceneNode(const std::string& text, std::weak_ptr<SceneNode> parent, const std::string& name, sf::Vector2f position);
 };
 
 

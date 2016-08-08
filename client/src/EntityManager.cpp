@@ -10,10 +10,10 @@ EntityManager::EntityManager(Scene& scene) : scene(scene), isPlayerSet(false) {}
 
 std::weak_ptr<Player> EntityManager::addNewPlayer(const unsigned int &id, const std::string &character_texture) {
     if (isPlayerSet) {
-        throw new EntityManagerException("addNewPlayer", "A player is already set");
+        throw EntityManagerException("addNewPlayer", "A player is already set");
     }
     if (entities.count(id) != 0) {
-        throw new EntityManagerException("addNewPlayer", "ID already used");
+        throw EntityManagerException("addNewPlayer", "ID already used");
     }
 
     std::shared_ptr<Player> newPlayer = std::make_shared<Player>(scene, id, "Unamed");
@@ -29,7 +29,9 @@ std::weak_ptr<Player> EntityManager::addNewPlayer(const unsigned int &id, const 
 
 
 void EntityManager::setPlayer(const unsigned int &id) {
-    if (entities.count(id) == 0) throw new EntityManagerException("setPlayer", "this ID do not exist");
+    if (entities.count(id) == 0) {
+        throw EntityManagerException("setPlayer", "this ID do not exist");
+    }
 
     player_id = id;
     isPlayerSet = true;

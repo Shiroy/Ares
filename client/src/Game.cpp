@@ -95,6 +95,8 @@ void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject)
                         auto& camera = _player->getSceneNode().lock()->getScene()->getCamera();
                         camera.followEntity(_player->getSceneNode());
                     }
+
+                    scene.addTextSceneNode("Shiroy", _player->getSceneNode(), "player-name", sf::Vector2f(0, -15));
                     break;
             }
             break;

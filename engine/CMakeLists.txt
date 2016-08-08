@@ -1,7 +1,7 @@
 set(source_engine src/TextureManager.cpp src/TextureManager.h
         src/Tilemap.cpp src/Tilemap.h src/MathUtil.h
         src/QuadTree.cpp src/QuadTree.h
-        src/AresException.cpp src/AresException.h src/MathUtil.cpp src/Scene.cpp src/Scene.h src/SceneNode.cpp src/SceneNode.h src/CameraSceneNode.cpp src/CameraSceneNode.h src/EmptySceneNode.h src/SpriteSceneNode.cpp src/SpriteSceneNode.h)
+        src/AresException.cpp src/AresException.h src/MathUtil.cpp src/Scene.cpp src/Scene.h src/SceneNode.cpp src/SceneNode.h src/CameraSceneNode.cpp src/CameraSceneNode.h src/EmptySceneNode.h src/SpriteSceneNode.cpp src/SpriteSceneNode.h src/TextSceneNode.cpp src/TextSceneNode.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/json)
 include_directories(${CMAKE_SOURCE_DIR}/shared/src)
