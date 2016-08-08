@@ -8,6 +8,7 @@
 #include "Character.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <memory>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 class Player : public Character {
     float maxPower;
@@ -24,7 +25,13 @@ public:
 
     void setTarget(const std::weak_ptr<Entity> &target);
 
+    bool isTargetInsideScope() const;
+
     void drawTarget(sf::RenderTarget &canvas) const;
+
+    void drawScope(sf::RenderTarget &canvas) const;
+
+public:
 
     virtual void handleReflectorUpdate(
             const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) override;

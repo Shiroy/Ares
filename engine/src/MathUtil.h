@@ -15,4 +15,6 @@ T clamp(T min, T value, T max) {
 
 void normalize(sf::Vector2f &vector);
 
+double distanceBetween2Points(sf::Vector2f &pt1, sf::Vector2f &pt2);
+
 #endif //ARES_MATH_UTIL_H_H

@@ -24,9 +24,9 @@ class EntityManager {
 public:
     static EntityManager & getInstance();
 
-    void addNewPlayer(const unsigned int &id);
+    std::weak_ptr<Player> addNewPlayer(const unsigned int &id);
 
-    void addNewCharacter(const unsigned int &id);
+    std::weak_ptr<Character> addNewCharacter(const unsigned int &id);
 
     void setPlayer(const unsigned int &id);
 
