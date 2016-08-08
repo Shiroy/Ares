@@ -12,6 +12,8 @@
 #include <unordered_set>
 #include <SFML/System/Time.hpp>
 
+class Scene;
+
 class SceneNode : public sf::Drawable, public std::enable_shared_from_this<SceneNode>, public sf::Transformable {
 
     friend class Scene;
@@ -23,8 +25,10 @@ class SceneNode : public sf::Drawable, public std::enable_shared_from_this<Scene
 
     void setParent(std::weak_ptr<SceneNode> parent) { this->parent = parent; }
 
+    Scene* scene;
+
 protected:
-    SceneNode(const std::string& name) : name(name) {}
+    SceneNode(const std::string& name, Scene* scene) : name(name), scene(scene) {}
 
 public:
     const std::string &getName() const {
@@ -39,6 +43,9 @@ public:
         child->setParent(shared_from_this());
         children.insert(child);
     }
+
+    Scene* getScene() { return scene; }
+    const Scene* getScene() const { return scene; }
 
     virtual void update(const sf::Time &dt) {}
 };

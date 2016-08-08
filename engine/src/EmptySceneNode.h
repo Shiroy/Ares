@@ -7,13 +7,14 @@
 
 
 #include "SceneNode.h"
+#include "Scene.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
 
 class EmptySceneNode : public SceneNode {
 public:
-    EmptySceneNode(const std::string& name) : SceneNode(name) {}
+    EmptySceneNode(const std::string& name, Scene* scene) : SceneNode(name, scene) {}
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override { }
 };
 

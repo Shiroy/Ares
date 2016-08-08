@@ -92,6 +92,8 @@ void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject)
                     _player->getSceneNode().lock()->setPosition(object.position().x(), object.position().y());
                     if(object.myself()) {
                         playerCommands.setPlayer(player);
+                        auto& camera = _player->getSceneNode().lock()->getScene()->getCamera();
+                        camera.followEntity(_player->getSceneNode());
                     }
                     break;
             }

@@ -6,7 +6,7 @@
 
 #include "SpriteSceneNode.h"
 
-Scene::Scene() : rootSceneNode(new EmptySceneNode("root")), camera("camera") {
+Scene::Scene() : rootSceneNode(new EmptySceneNode("root", this)), camera("camera", this) {
     allEntities["root"] = rootSceneNode;
 }
 
@@ -30,7 +30,7 @@ void Scene::loadMap(const std::string &tilemap, const std::string &texture) {
 }
 
 std::weak_ptr<SpriteSceneNode> Scene::addEntitySceneNode(std::weak_ptr<SceneNode> parent, const std::string& name, sf::Vector2f position) {
-    std::shared_ptr<SpriteSceneNode> newEntity = std::make_shared<SpriteSceneNode>(name);
+    std::shared_ptr<SpriteSceneNode> newEntity = std::make_shared<SpriteSceneNode>(name, this);
     parent.lock()->addChildSceneNode(newEntity);
     newEntity->setPosition(position);
 

@@ -43,6 +43,8 @@ public:
     CameraSceneNode& getCamera() { return camera; }
     const CameraSceneNode& getCamera() const { return camera; }
 
+    const Tilemap& getMap() const { return m_map; }
+
     void loadMap(const std::string &tilemap, const std::string &texture);
 
     std::weak_ptr<SceneNode> getRootSceneNode() { return rootSceneNode; }

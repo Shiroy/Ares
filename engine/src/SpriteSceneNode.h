@@ -38,7 +38,7 @@ class SpriteSceneNode : public SceneNode {
     bool playing;
 
 public:
-    SpriteSceneNode(const std::string &name) : SceneNode(name), frameSize(64, 64), currentAnimation(nullptr), playing(false) {}
+    SpriteSceneNode(const std::string &name, Scene* scene) : SceneNode(name, scene), frameSize(64, 64), currentAnimation(nullptr), playing(false) {}
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
