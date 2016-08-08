@@ -48,16 +48,7 @@ public:
 
     void setTextureName(const std::string &textureName);
 
-    void addAnimation(const std::string &name, std::vector<int> frames, bool repeated, const sf::Time &delay) {
-        Animation entry;
-        entry.delay = delay;
-        entry.frames = frames;
-        entry.repeated = repeated;
-        entry.currentFrame = 0;
-        entry.nextFrameTime = sf::seconds(0.0f);
-
-        animation[name] = entry;
-    }
+    void addAnimation(const std::string &name, std::vector<int> frames, bool repeated, const sf::Time &delay);
 
     const sf::Vector2f &getFrameSize() const {
         return frameSize;
@@ -75,7 +66,7 @@ public:
 
     void updateSprite();
 
-    const sf::IntRect getCurrenFrameRect();
+    const sf::IntRect getCurrentFrameRect();
 };
 
 

@@ -5,23 +5,23 @@
 #ifndef ARES_PLAYER_H
 #define ARES_PLAYER_H
 
-#include "Character.h"
+#include "Entity.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <memory>
 
-class Player : public Character {
+class Player : public Entity {
     float speed;
     std::weak_ptr<Entity> target;
 public:
-    float getSpeed() const;
+    Player(Scene& scene, unsigned int id, const std::string &name = "Unamed");
+
+    float getSpeed() const {return speed;};
 
     void setSpeed(float speed);
 
     const std::weak_ptr<Entity> getTarget() const;
 
     void setTarget(const std::weak_ptr<Entity> &target);
-
-    //void drawTarget(sf::RenderTarget &canvas) const;
 };
 
 

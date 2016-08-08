@@ -12,7 +12,7 @@
 #include "NetworkThread.h"
 #include <Tilemap.h>
 #include <QuadTree.h>
-#include <EntityManager.h>
+#include "EntityManager.h"
 #include <Scene.h>
 
 
@@ -21,6 +21,9 @@ class Game {
 
     std::weak_ptr<Player> player;
     PlayerCommands playerCommands;
+
+    EntityManager entityManager;
+
 public:
     Game();
 
@@ -32,10 +35,6 @@ private:
     void update(sf::Time deltaTime);
 
     void render();
-
-    //Tilemap map;
-
-    //sf::View calculateViewport();
 
     Scene scene;
 

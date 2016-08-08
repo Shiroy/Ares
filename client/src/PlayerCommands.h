@@ -9,7 +9,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <QuadTree.h>
 #include <memory>
-#include <Player.h>
+#include <SFML/System/Time.hpp>
+#include "Player.h"
 
 class PlayerCommands {
 private:

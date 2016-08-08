@@ -3,7 +3,6 @@
 //
 
 #include "SpriteSceneNode.h"
-#include "Entity.h"
 #include "AresException.h"
 #include "TextureManager.h"
 
@@ -18,6 +17,7 @@ void SpriteSceneNode::update(const sf::Time &dt) {
     if(currentAnimation && playing) {
         currentAnimation->nextFrameTime -= dt;
         if(currentAnimation->nextFrameTime <= sf::seconds(0.0f)){
+            currentAnimation->currentFrame = ++currentAnimation->currentFrame % (int)currentAnimation->frames.size();
             updateSprite();
             currentAnimation->nextFrameTime = currentAnimation->delay;
         }
@@ -41,14 +41,28 @@ void SpriteSceneNode::setTextureName(const std::string &textureName) {
 }
 
 void SpriteSceneNode::updateSprite() {
-    sprite.setTextureRect(getCurrenFrameRect());
+    sprite.setTextureRect(getCurrentFrameRect());
 }
 
-const sf::IntRect SpriteSceneNode::getCurrenFrameRect() {
-    int offsetX = static_cast<int>(currentAnimation->currentFrame * frameSize.x) %
-                  texture->getSize().x;
-    int offsetY = static_cast<int>(currentAnimation->currentFrame * frameSize.x) /
-                  static_cast<int>(texture->getSize().x * frameSize.y);
+const sf::IntRect SpriteSceneNode::getCurrentFrameRect() {
+    int frameIndex = currentAnimation->frames[currentAnimation->currentFrame];
+    int sprite_row_length = (int)texture->getSize().x / (int)frameSize.x;
+    return sf::IntRect((frameIndex % sprite_row_length) * frameSize.x, (frameIndex / sprite_row_length) * frameSize.y, (int)frameSize.x, (int)frameSize.y);
+}
 
-    return sf::IntRect(offsetX, offsetY, (int)frameSize.x, (int)frameSize.y);
+void
+SpriteSceneNode::addAnimation(const std::string &name, std::vector<int> frames, bool repeated, const sf::Time &delay)  {
+    Animation entry;
+    entry.delay = sf::seconds(delay.asSeconds() / frames.size());
+    entry.frames = frames;
+    entry.repeated = repeated;
+    entry.currentFrame = 0;
+    entry.nextFrameTime = sf::seconds(0.0f);
+
+    animation[name] = entry;
+
+    if(!currentAnimation) {
+        currentAnimation = &animation[name];
+        updateSprite();
+    }
 }

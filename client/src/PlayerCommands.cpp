@@ -5,6 +5,7 @@
 #include <SFML/Window/Mouse.hpp>
 #include <MathUtil.h>
 #include "PlayerCommands.h"
+#include "SpriteSceneNode.h"
 
 void PlayerCommands::handleInput(const sf::Keyboard::Key &key, const bool &isPressed) {
     switch (key) {
@@ -54,7 +55,6 @@ void PlayerCommands::setPlayer(const std::weak_ptr<Player> &player) {
 
 void PlayerCommands::updatePlayer(sf::Time deltaTime) {
     auto playerShptr = player.lock();
-    playerShptr->update(deltaTime);
 
     sf::Vector2f movement(0.f, 0.f);
     if (movingUp)
@@ -69,14 +69,24 @@ void PlayerCommands::updatePlayer(sf::Time deltaTime) {
     if (movement != sf::Vector2f(0.0f, 0.0f)) {
         normalize(movement);
         movement *= playerShptr->getSpeed();
-//        playerShptr->move(movement * deltaTime.asSeconds());
+        playerShptr->move(movement * deltaTime.asSeconds());
     }
 
-    if (movement.x > 0.f) playerShptr->play("right");
-    if (movement.x < 0.f) playerShptr->play("left");
-    if (movement.y > 0.f) playerShptr->play("down");
-    if (movement.y < 0.f) playerShptr->play("up");
-    if (movement.x == 0.f && movement.y == 0.f) playerShptr->stop();
+    if (movement.x > 0.f) {
+        playerShptr->getSceneNode().lock()->play("right");
+    }
+    if (movement.x < 0.f) {
+        playerShptr->getSceneNode().lock()->play("left");
+    }
+    if (movement.y > 0.f) {
+        playerShptr->getSceneNode().lock()->play("down");
+    }
+    if (movement.y < 0.f) {
+        playerShptr->getSceneNode().lock()->play("up");
+    }
+    if (movement.x == 0.f && movement.y == 0.f) {
+        playerShptr->getSceneNode().lock()->stop();
+    }
 }
 
 bool PlayerCommands::isQuadTreeDebug() const {
