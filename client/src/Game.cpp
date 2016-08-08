@@ -114,24 +114,36 @@ void Game::handlePacket(const AresProtocol::AresMessage &message) {
 }
 void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject) {
     switch (modifyObject.action_case()) {
-        case AresProtocol::ModifyObject::kCreate:
+        case AresProtocol::ModifyObject::kCreate: {
             auto object = modifyObject.create();
             switch (object.type()) {
                 case AresProtocol::ModifyObject::CreateObject::PLAYER:
-                    EntityManager::getInstance().addNewPlayer(modifyObject.id(), "assets/img/char_64_64_player.png");
+                    EntityManager::getInstance().addNewPlayer(modifyObject.id());
 
                     player = EntityManager::getInstance().getPlayer();
 
                     auto shared_player = player.lock();
 
-                    shared_player->setSpeed(100.f);
                     shared_player->setPosition(object.position().x(), object.position().y());
+
+                    shared_player->handleReflectorUpdate(object.reflector());
 
                     playerCommands.setPlayer(shared_player);
 
                     quadTree.insert(shared_player);
+
                     break;
             }
+            }break;
+        case AresProtocol::ModifyObject::kUpdate: {
+            auto entity = EntityManager::getInstance().getEntity(modifyObject.id());
+            auto entity_shr_ptr = entity.lock();
+            entity_shr_ptr->handleReflectorUpdate(modifyObject.update().reflector());
+            } break;
+        case AresProtocol::ModifyObject::kDelete: {
+            EntityManager::getInstance().removeEntity(modifyObject.id());
+            } break;
+        default:
             break;
     }
 }

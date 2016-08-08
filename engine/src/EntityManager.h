@@ -24,9 +24,9 @@ class EntityManager {
 public:
     static EntityManager & getInstance();
 
-    void addNewPlayer(const unsigned int &id, const std::string &character_texture);
+    void addNewPlayer(const unsigned int &id);
 
-    void addNewCharacter(const unsigned int &id, const std::string &character_texture);
+    void addNewCharacter(const unsigned int &id);
 
     void setPlayer(const unsigned int &id);
 

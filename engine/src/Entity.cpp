@@ -3,6 +3,7 @@
 //
 
 #include "Entity.h"
+#include "TextureManager.h"
 
 Entity::Entity(const std::string &name, unsigned int maxHealth, int health) : name(name), maxHealth(maxHealth),
                                                                               health(health) {}
@@ -36,4 +37,25 @@ const sf::Vector2f Entity::getCenter() const {
     center.x += getLocalBounds().width / 2;
     center.y += getGlobalBounds().height / 2;
     return center;
+}
+
+void Entity::handleReflectorUpdate(
+        const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) {
+    for (auto element : reflector){
+        if(element.key() == "sprite"){
+            if(element.has_string()){
+                setTexture(TextureManager::getInstance().getTexture(element.string()));
+            }
+        }
+        else if(element.key() == "maxHealth"){
+            if(element.has_number()){
+                maxHealth = element.number();
+            }
+        }
+        else if(element.key() == "health"){
+            if(element.has_number()){
+                health = element.number();
+            }
+        }
+    }
 }

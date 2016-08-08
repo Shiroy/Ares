@@ -13,22 +13,20 @@ EntityManager & EntityManager::getInstance() {
     return instance;
 }
 
-void EntityManager::addNewPlayer(const unsigned int &id, const std::string &character_texture) {
+void EntityManager::addNewPlayer(const unsigned int &id) {
     if (isPlayerSet) throw new EntityManagerException("addNewPlayer", "A player is already set");
     if (entities.count(id) != 0) throw new EntityManagerException("addNewPlayer", "ID already used");
 
     entities[id].reset(new Player());
-    entities[id].get()->setTexture(TextureManager::getInstance().getTexture(character_texture));
     AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 
     setPlayer(id);
 }
 
-void EntityManager::addNewCharacter(const unsigned int &id, const std::string &character_texture) {
+void EntityManager::addNewCharacter(const unsigned int &id) {
     if (entities.count(id) != 0) throw new EntityManagerException("addNewCharacter", "ID already used");
 
     entities[id].reset(new Character());
-    entities[id].get()->setTexture(TextureManager::getInstance().getTexture(character_texture));
     AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 }
 

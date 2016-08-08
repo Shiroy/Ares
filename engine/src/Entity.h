@@ -8,6 +8,7 @@
 
 #include <string>
 #include <SFML/Graphics/Sprite.hpp>
+#include <Ares.pb.h>
 
 class Entity : public sf::Sprite{
     std::string name;
@@ -29,6 +30,8 @@ public:
     void setHealth(int health);
 
     const sf::Vector2f getCenter() const;
+
+    virtual void handleReflectorUpdate(const ::google::protobuf::RepeatedPtrField< ::AresProtocol::ModifyObject_ReflectorMap >& reflector);
 };
 
 
