@@ -2,6 +2,7 @@
 // Created by tdancois on 7/29/16.
 //
 
+#include <SFML/Window.hpp>
 #include "Entity.h"
 
 Entity::Entity(const std::string &name, unsigned int maxHealth, int health) : name(name), maxHealth(maxHealth),
@@ -29,11 +30,4 @@ int Entity::getHealth() const {
 
 void Entity::setHealth(int health) {
     Entity::health = health;
-}
-
-const sf::Vector2f Entity::getCenter() const {
-    sf::Vector2f center(getPosition());
-    center.x += getLocalBounds().width / 2;
-    center.y += getGlobalBounds().height / 2;
-    return center;
 }

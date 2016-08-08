@@ -69,7 +69,7 @@ void PlayerCommands::updatePlayer(sf::Time deltaTime) {
     if (movement != sf::Vector2f(0.0f, 0.0f)) {
         normalize(movement);
         movement *= playerShptr->getSpeed();
-        playerShptr->move(movement * deltaTime.asSeconds());
+//        playerShptr->move(movement * deltaTime.asSeconds());
     }
 
     if (movement.x > 0.f) playerShptr->play("right");

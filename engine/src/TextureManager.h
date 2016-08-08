@@ -8,12 +8,14 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <map>
+#include <string>
+#include <memory>
 
 class TextureManager {
-    std::map<std::string, sf::Texture> textures;
+    std::map<std::string, std::shared_ptr<sf::Texture>> textures;
 public:
     static TextureManager& getInstance();
-    sf::Texture &getTexture(const std::string &filename);
+    std::shared_ptr<sf::Texture> getTexture(const std::string &filename);
 };
 
 

@@ -12,5 +12,5 @@ AnimatedSpriteCharacter::AnimatedSpriteCharacter() {
     this->addAnimation("death", 64, 64, {260, 261, 262, 263, 264, 265}, 1, sf::seconds(1), false);
     this->addAnimation("spell", 64, 64, {26, 27, 28, 29, 30, 31, 32}, 1, sf::seconds(1), true);
 
-    setTextureRect(sf::IntRect(0, 128, 64, 64));
+//    setTextureRect(sf::IntRect(0, 128, 64, 64));
 }

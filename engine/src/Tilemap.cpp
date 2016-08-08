@@ -61,7 +61,7 @@ void Tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
                 tile_value--;
 
-                int tileset_row_length = tileset.getSize().x / tile_width;
+                int tileset_row_length = tileset->getSize().x / tile_width;
                 sf::Vector2f textureCoord = tile_value_to_tex_coord(tile_value, tileset_row_length, tile_width, tile_height);
 
                 sf::Vertex vertex[4];
@@ -84,7 +84,7 @@ void Tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
         }
     }
 
-    states.texture = &tileset;
+    states.texture = tileset.get();
     target.draw(vertexArray.data(), vertexArray.size(), sf::Quads, states);
 }
 

@@ -7,12 +7,15 @@
 
 
 #include <string>
-#include <SFML/Graphics/Sprite.hpp>
+#include <memory>
 
-class Entity : public sf::Sprite{
+class EntitySceneNode;
+
+class Entity {
     std::string name;
     unsigned int maxHealth;
     int health;
+    std::weak_ptr<EntitySceneNode> sceneNode;
 public:
     Entity(const std::string &name = "unname", unsigned int maxHealth = 500, int health = 500);
 
@@ -28,7 +31,6 @@ public:
 
     void setHealth(int health);
 
-    const sf::Vector2f getCenter() const;
 };
 
 

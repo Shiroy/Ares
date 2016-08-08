@@ -36,8 +36,6 @@ public:
 
     void removeEntity(const unsigned int &id);
 
-    void draw(sf::RenderTarget &canvas) const;
-
     unsigned long size() const;
 };
 

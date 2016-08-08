@@ -28,7 +28,7 @@ void Player::setTarget(const std::weak_ptr<Entity> &target) {
 }
 
 
-void Player::drawTarget(sf::RenderTarget &canvas) const {
+/*void Player::drawTarget(sf::RenderTarget &canvas) const {
     if (target.lock()) {
         sf::RectangleShape rshap(
                 sf::Vector2f(target.lock()->getGlobalBounds().width, target.lock()->getGlobalBounds().height));
@@ -52,7 +52,7 @@ void Player::drawTarget(sf::RenderTarget &canvas) const {
                          target.lock()->getGlobalBounds().top + target.lock()->getGlobalBounds().height / 2);
         canvas.draw(text);
     }
-}
+}*/
 
 
 

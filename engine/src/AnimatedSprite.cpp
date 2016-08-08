@@ -20,17 +20,17 @@ void AnimatedSprite::update(sf::Time dt) {
             else animations[current_animation].currentFrameIndex = nextFrameIndex;
 
         }
-        this->setTextureRect(this->getCurrentFrameRectangle());
+        //this->setTextureRect(this->getCurrentFrameRectangle());
     }
 }
 
 const sf::IntRect AnimatedSprite::getCurrentFrameRectangle() const {
-    int offsetX = animations.at(current_animation).currentFrame() * animations.at(current_animation).frameSize.x %
+    /*int offsetX = animations.at(current_animation).currentFrame() * animations.at(current_animation).frameSize.x %
                   this->getTexture()->getSize().x;
     int offsetY = animations.at(current_animation).currentFrame() * animations.at(current_animation).frameSize.x /
                   this->getTexture()->getSize().x * animations.at(current_animation).frameSize.y;
     return sf::IntRect(offsetX, offsetY, animations.at(current_animation).frameSize.x,
-                       animations.at(current_animation).frameSize.y);
+                       animations.at(current_animation).frameSize.y);*/
 }
 
 void AnimatedSprite::addAnimation(const std::string &name, const int &frameSizeX, const int &framseSizeY,

@@ -21,7 +21,7 @@ public:
 
     void setTarget(const std::weak_ptr<Entity> &target);
 
-    void drawTarget(sf::RenderTarget &canvas) const;
+    //void drawTarget(sf::RenderTarget &canvas) const;
 };
 
 

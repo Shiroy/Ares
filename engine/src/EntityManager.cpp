@@ -18,8 +18,8 @@ void EntityManager::addNewPlayer(const unsigned int &id, const std::string &char
     if (entities.count(id) != 0) throw new EntityManagerException("addNewPlayer", "ID already used");
 
     entities[id].reset(new Player());
-    entities[id].get()->setTexture(TextureManager::getInstance().getTexture(character_texture));
-    AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
+    //entities[id]->setTextureName(character_texture);
+    //AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 
     setPlayer(id);
 }
@@ -28,8 +28,8 @@ void EntityManager::addNewCharacter(const unsigned int &id, const std::string &c
     if (entities.count(id) != 0) throw new EntityManagerException("addNewCharacter", "ID already used");
 
     entities[id].reset(new Character());
-    entities[id].get()->setTexture(TextureManager::getInstance().getTexture(character_texture));
-    AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
+    //entities[id]->setTextureName(character_texture);
+//    AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 }
 
 
@@ -48,7 +48,7 @@ std::weak_ptr<Entity> EntityManager::getEntity(const unsigned int &id) {
 
 std::weak_ptr<Player> EntityManager::getPlayer() {
     if (!isPlayerSet) throw new EntityManagerException("getPlayer", "no player set");
-    return std::dynamic_pointer_cast<Player>(entities.at(player_id));
+//    return std::dynamic_pointer_cast<Player>(entities.at(player_id));
 }
 
 
@@ -60,11 +60,3 @@ void EntityManager::removeEntity(const unsigned int &id) {
 unsigned long EntityManager::size() const {
     return entities.size();
 }
-
-
-void EntityManager::draw(sf::RenderTarget &canvas) const {
-    for (auto entity: entities) {
-        canvas.draw(*entity.second);
-    }
-}
-

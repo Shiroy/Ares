@@ -13,12 +13,11 @@
 #include <Tilemap.h>
 #include <QuadTree.h>
 #include <EntityManager.h>
+#include <Scene.h>
 
 
 class Game {
     sf::RenderWindow mWindow;
-
-    QuadTree quadTree;
 
     std::weak_ptr<Player> player;
     PlayerCommands playerCommands;
@@ -34,9 +33,11 @@ private:
 
     void render();
 
-    Tilemap map;
+    //Tilemap map;
 
-    sf::View calculateViewport();
+    //sf::View calculateViewport();
+
+    Scene scene;
 
     NetworkThread networkThread;
 
