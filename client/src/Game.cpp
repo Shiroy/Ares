@@ -82,7 +82,9 @@ void Game::render() {
     EntityManager::getInstance().draw(mWindow);
 
     if (!player.expired()) {
-        player.lock()->drawTarget(mWindow);
+        auto player_shrptr = player.lock();
+        player_shrptr->drawTarget(mWindow);
+        player_shrptr->drawScope(mWindow);
     }
 
     quadTree.forceUpdate();
@@ -118,19 +120,27 @@ void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject)
             auto object = modifyObject.create();
             switch (object.type()) {
                 case AresProtocol::ModifyObject::CreateObject::PLAYER:
-                    EntityManager::getInstance().addNewPlayer(modifyObject.id());
 
-                    player = EntityManager::getInstance().getPlayer();
+                    std::shared_ptr<Entity> new_character;
 
-                    auto shared_player = player.lock();
+                    if(object.myself()) {
+                        player = EntityManager::getInstance().addNewPlayer(modifyObject.id());
 
-                    shared_player->setPosition(object.position().x(), object.position().y());
+                        playerCommands.setPlayer(player);
 
-                    shared_player->handleReflectorUpdate(object.reflector());
+                        new_character = player.lock();
+                    }
+                    else {
+                        auto new_char = EntityManager::getInstance().addNewCharacter(modifyObject.id());
 
-                    playerCommands.setPlayer(shared_player);
+                        new_character = new_char.lock();
+                    }
 
-                    quadTree.insert(shared_player);
+                    new_character->setPosition(object.position().x(), object.position().y());
+
+                    new_character->handleReflectorUpdate(object.reflector());
+
+                    quadTree.insert(new_character);
 
                     break;
             }

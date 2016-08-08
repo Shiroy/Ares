@@ -13,7 +13,7 @@ EntityManager & EntityManager::getInstance() {
     return instance;
 }
 
-void EntityManager::addNewPlayer(const unsigned int &id) {
+std::weak_ptr<Player> EntityManager::addNewPlayer(const unsigned int &id) {
     if (isPlayerSet) throw new EntityManagerException("addNewPlayer", "A player is already set");
     if (entities.count(id) != 0) throw new EntityManagerException("addNewPlayer", "ID already used");
 
@@ -21,13 +21,17 @@ void EntityManager::addNewPlayer(const unsigned int &id) {
     AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
 
     setPlayer(id);
+
+    return getPlayer();
 }
 
-void EntityManager::addNewCharacter(const unsigned int &id) {
+std::weak_ptr<Character> EntityManager::addNewCharacter(const unsigned int &id) {
     if (entities.count(id) != 0) throw new EntityManagerException("addNewCharacter", "ID already used");
 
     entities[id].reset(new Character());
     AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
+
+    return std::dynamic_pointer_cast<Character>(entities.at(id));
 }
 
 

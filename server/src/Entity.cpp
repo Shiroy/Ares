@@ -22,7 +22,7 @@ void Entity::setInitialValues() {
     m_reflectors["powerRegenRate"] = 2.0f;
     m_reflectors["sprite"] = "assets/img/char_64_64_player.png";
     m_reflectors["animation"] = "none";
-    m_reflectors["scope"] = 230.0f;
+    m_reflectors["scope"] = 150.0f;
     m_reflectors["speed"] = 300.0f;
 }
 
