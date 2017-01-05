@@ -14,28 +14,27 @@
 
 typedef std::tuple<std::shared_ptr<Client>, std::shared_ptr<sf::TcpSocket>> SessionEntry;
 
-Listener_Thread::Listener_Thread() {
+Listener_Thread::Listener_Thread(const unsigned int &listenerPort) {
+    port = listenerPort;
     m_stop = false;
 }
 
-void Listener_Thread::run()
-{
+void Listener_Thread::run() {
     sf::TcpListener listener;
-    if (listener.listen(21194) != sf::Socket::Done) {
-        std::cerr << "Cannot bind the listenre socket" << std::endl;
+    if (listener.listen(port) != sf::Socket::Done) {
+        std::cerr << "Cannot bind the listener socket" << std::endl;
         perror("ListenerThread");
         exit(1);
     }
 
-    std::cout << "Server listening for new connection" << std::endl;
+    std::cout << "Server listening for new connection on port " << port << std::endl;
 
     sf::SocketSelector selector;
     selector.add(listener);
 
     std::list<SessionEntry> sessionStorage;
 
-    while(m_stop == false)
-    {
+    while (m_stop == false) {
         bool someReady = selector.wait(sf::milliseconds(32));
 
         if (someReady && selector.isReady(listener)) {
@@ -47,9 +46,8 @@ void Listener_Thread::run()
                 m_sessionToAdd.push_back(newSession);
                 sessionStorage.push_back(std::make_tuple(newSession, newClient));
                 selector.add(*newClient);
-                std::cout << "Un client c'est connecté" << std::endl;
-            }
-            else {
+                std::cout << "A new client has connected" << std::endl;
+            } else {
                 perror("ListenerThread");
             }
         }
@@ -63,20 +61,19 @@ void Listener_Thread::run()
                 sf::Packet newPacket;
                 sf::Socket::Status s = client->receive(newPacket);
                 std::cout << "Receive s: " << s << std::endl;
-                switch (s){
+                switch (s) {
                     case sf::Socket::Done: {
                         AresProtocol::AresMessage newMsg;
                         if (newMsg.ParseFromArray(newPacket.getData(), newPacket.getDataSize())) {
                             session->getReceptionQueue().push_back(newMsg);
-                        }
-                        else {
+                        } else {
                             std::cerr << "Received a malformed message from " << client->getRemoteAddress()
                                       << std::endl;
                         }
                         break;
                     }
                     case sf::Socket::Disconnected:
-                        std::cout << "Un client c'est déconnecté" << std::endl;
+                        std::cout << "A client has disconnected" << std::endl;
                         m_sessionToRemove.push_back(session);
                         selector.remove(*client);
                         client->disconnect();
@@ -89,7 +86,7 @@ void Listener_Thread::run()
             }
 
             LockedQueue<AresProtocol::AresMessage> &sendingQueue = session->getSendingQueue();
-            if(sendingQueue.size() > 0) {
+            if (sendingQueue.size() > 0) {
                 auto message = sendingQueue.front();
                 sf::Packet pkt;
                 char *data = new char[message.ByteSize()];
@@ -98,11 +95,10 @@ void Listener_Thread::run()
                     sf::Socket::Status s = client->send(pkt);
 
                     if (s != sf::Socket::Done) {
-                        std::cout << "Erreur à l'envoie d'un paquet" << std::endl;
+                        std::cout << "An error occured durring send packet operation" << std::endl;
                         perror("ListenerThread");
                     }
-                }
-                else {
+                } else {
                     std::cerr << "Error serializing a message" << std::endl;
                 }
                 sendingQueue.pop();
@@ -110,7 +106,7 @@ void Listener_Thread::run()
             }
         }
 
-        sessionStorage.remove_if([](const SessionEntry& s){
+        sessionStorage.remove_if([](const SessionEntry &s) {
             auto &session = std::get<0>(s);
             return session->isToBeDeleted();
         });
