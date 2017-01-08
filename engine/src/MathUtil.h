@@ -7,10 +7,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <SFML/System.hpp>
 
 template<class T>
 T clamp(T min, T value, T max) {
-    return std::max(min, std::min(value, max));
+  return std::max(min, std::min(value, max));
 }
 
 void normalize(sf::Vector2f &vector);

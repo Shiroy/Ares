@@ -2,8 +2,8 @@
 #include "Game.h"
 
 int main() {
-    Game game;
-    game.run();
+  Game game;
+  game.run();
 
-    google::protobuf::ShutdownProtobufLibrary();
+  google::protobuf::ShutdownProtobufLibrary();
 }

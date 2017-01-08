@@ -1,37 +1,37 @@
 #pragma once
 
-
 #include <string>
 #include "Position.h"
 #include "Reflector.h"
 
 enum EntityType {
-    ENTITY,
-    PLAYER
+  ENTITY,
+  PLAYER
 };
 
 class Entity {
+ protected:
+  long m_id;
+  std::string m_name;
+  Position m_position;
+  Reflector m_reflectors;
 
-protected:
-    long m_id;
-    std::string m_name;
-    Position m_position;
-    Reflector m_reflectors;
-public:
-    Entity(unsigned int m_id, const std::string &m_name);
-    void move(float dx, float dy);
+ public:
+  Entity(unsigned int m_id, const std::string &m_name);
 
-    virtual EntityType getType() { return ENTITY; }
+  void move(float dx, float dy);
 
-    virtual void addToWorld();
+  virtual EntityType getType() { return ENTITY; }
 
-    void setInitialValues();
+  virtual void addToWorld();
 
-    unsigned int getId() const {
-        return m_id;
-    }
+  void setInitialValues();
 
-    const std::string &getName() const {
-        return m_name;
-    }
+  unsigned int getId() const {
+    return m_id;
+  }
+
+  const std::string &getName() const {
+    return m_name;
+  }
 };

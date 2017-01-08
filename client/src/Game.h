@@ -14,36 +14,35 @@
 #include <QuadTree.h>
 #include <EntityManager.h>
 
-
 class Game {
-    sf::RenderWindow mWindow;
+  sf::RenderWindow mWindow;
 
-    QuadTree quadTree;
+  QuadTree quadTree;
 
-    std::weak_ptr<Player> player;
-    PlayerCommands playerCommands;
-public:
-    Game();
+  std::weak_ptr<Player> player;
+  PlayerCommands playerCommands;
 
-    void run();
+ public:
+  Game();
 
-private:
-    void processEvents();
+  void run();
 
-    void update(sf::Time deltaTime);
+ private:
+  void processEvents();
 
-    void render();
+  void update(sf::Time deltaTime);
 
-    Tilemap map;
+  void render();
 
-    sf::View calculateViewport();
+  Tilemap map;
 
-    NetworkThread networkThread;
+  sf::View calculateViewport();
 
-    void handlePacket(const AresProtocol::AresMessage &message);
+  NetworkThread networkThread;
 
-    void handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject);
+  void handlePacket(const AresProtocol::AresMessage &message);
+
+  void handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject);
 };
-
 
 #endif //ARES_GAME_H

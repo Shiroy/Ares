@@ -9,19 +9,17 @@
 #include <memory>
 #include "AnimatedSprite.h"
 
-
 class AnimatedSpritesUpdater {
-    // singleton
-    AnimatedSpritesUpdater();
+  // singleton
+  AnimatedSpritesUpdater();
 
-    std::list<std::weak_ptr<AnimatedSprite>> sprites;
-public:
-    static AnimatedSpritesUpdater & getInstance();
+  std::list<std::weak_ptr<AnimatedSprite>> sprites;
+ public:
+  static AnimatedSpritesUpdater &getInstance();
 
-    void insert(std::weak_ptr<AnimatedSprite> sprite);
+  void insert(std::weak_ptr<AnimatedSprite> sprite);
 
-    void update(sf::Time dt);
+  void update(sf::Time dt);
 };
-
 
 #endif //ARES_ANIMATEDSPRITESUPDATER_H

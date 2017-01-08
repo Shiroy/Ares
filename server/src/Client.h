@@ -6,41 +6,40 @@
 
 class Player;
 
-class Client
-{
-public:
-    Client();
+class Client {
+ public:
+  Client();
 
-    void sendPacket(const AresProtocol::AresMessage &packet);
+  void sendPacket(const AresProtocol::AresMessage &packet);
 
-    void update();
+  void update();
 
-    void setPlayer(std::weak_ptr<Player> player) {
-        this->player = player;
-    }
+  void setPlayer(std::weak_ptr<Player> player) {
+    this->player = player;
+  }
 
-    const std::weak_ptr<Player> getPlayer() const {
-        return player;
-    }
+  const std::weak_ptr<Player> getPlayer() const {
+    return player;
+  }
 
-    bool isToBeDeleted() const {
-        return toBeDeleted;
-    }
+  bool isToBeDeleted() const {
+    return toBeDeleted;
+  }
 
-    void deleteLater() {
-        toBeDeleted = true;
-    }
+  void deleteLater() {
+    toBeDeleted = true;
+  }
 
-    LockedQueue<AresProtocol::AresMessage> &getReceptionQueue() { return m_receivedPacket; }
+  LockedQueue<AresProtocol::AresMessage> &getReceptionQueue() { return m_receivedPacket; }
 
-    LockedQueue<AresProtocol::AresMessage> &getSendingQueue() { return m_sentPacket; }
+  LockedQueue<AresProtocol::AresMessage> &getSendingQueue() { return m_sentPacket; }
 
-private:
-    LockedQueue<AresProtocol::AresMessage> m_receivedPacket;
-    LockedQueue<AresProtocol::AresMessage> m_sentPacket;
-    std::weak_ptr<Player> player;
+ private:
+  LockedQueue<AresProtocol::AresMessage> m_receivedPacket;
+  LockedQueue<AresProtocol::AresMessage> m_sentPacket;
+  std::weak_ptr<Player> player;
 
-    bool toBeDeleted;
+  bool toBeDeleted;
 
-    void handlePacket(const AresProtocol::AresMessage &message);
+  void handlePacket(const AresProtocol::AresMessage &message);
 };

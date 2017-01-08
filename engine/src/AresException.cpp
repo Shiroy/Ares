@@ -4,33 +4,35 @@
 
 #include "AresException.h"
 
-AresException::AresException(const std::string &message, const std::string &emiter, const std::string &method) : emiter(
-        emiter),
-                                                                                                                 method(method),
-                                                                                                                 message(message) {}
+AresException::AresException(const std::string &message,
+                             const std::string &emiter,
+                             const std::string &method)
+    : emiter(emiter),
+      method(method),
+      message(message) {}
 
 std::string AresException::what() const {
-    std::string err;
+  std::string err;
 
-    if (emiter != "") err += emiter;
-    if (method != "") err += ", " + method;
-    err += message;
+  if (emiter != "") err += emiter;
+  if (method != "") err += ", " + method;
+  err += message;
 
-    return err;
+  return err;
 }
 
 const std::string &AresException::getEmiter() const {
-    return emiter;
+  return emiter;
 }
 
 const std::string &AresException::getMethod() const {
-    return method;
+  return method;
 }
 
 const std::string &AresException::getMessage() const {
-    return message;
+  return message;
 }
 
 EntityManagerException::EntityManagerException(const std::string &message,
-                                               const std::string &method) : AresException("EntityManager", method,
-                                                                                          message) {}
+                                               const std::string &method)
+    : AresException("EntityManager", method, message) {}

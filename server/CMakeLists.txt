@@ -22,9 +22,9 @@ include_directories(${CMAKE_SOURCE_DIR}/vendor)
 include_directories(${CMAKE_SOURCE_DIR}/shared/src)
 add_executable(ares_server ${source_server} ${PROTO_SRC} ${PROTO_HDR})
 
-if(UNIX)
+if (UNIX)
     target_link_libraries(ares_server ${SFML_LIBRARIES} pthread)
-endif()
+endif ()
 
 target_link_libraries(ares_server ares_shared)
 target_link_libraries(ares_server ${PROTOBUF_LIBRARIES})

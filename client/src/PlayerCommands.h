@@ -5,41 +5,40 @@
 #ifndef ARES_PLAYERCOMMANDS_H
 #define ARES_PLAYERCOMMANDS_H
 
-
 #include <SFML/Window/Keyboard.hpp>
 #include <QuadTree.h>
 #include <memory>
 #include <Player.h>
 
 class PlayerCommands {
-private:
-    std::weak_ptr<Player> player;
-    bool movingUp;
-    bool movingDown;
-    bool movingLeft;
-    bool movingRight;
-    bool quadTreeDebug;
-public:
-    PlayerCommands();
+ private:
+  std::weak_ptr<Player> player;
+  bool movingUp;
+  bool movingDown;
+  bool movingLeft;
+  bool movingRight;
+  bool quadTreeDebug;
 
-    const std::weak_ptr<Player> &getPlayer() const;
+ public:
+  PlayerCommands();
 
-    void setPlayer(const std::weak_ptr<Player> &player);
+  const std::weak_ptr<Player> &getPlayer() const;
 
-    void handleInput(const sf::Keyboard::Key &key, const bool &isPressed);
+  void setPlayer(const std::weak_ptr<Player> &player);
 
-    void updatePlayer(sf::Time deltaTime);
+  void handleInput(const sf::Keyboard::Key &key, const bool &isPressed);
 
-    bool isMovingUp() const;
+  void updatePlayer(sf::Time deltaTime);
 
-    bool isMovingDown() const;
+  bool isMovingUp() const;
 
-    bool isMovingLeft() const;
+  bool isMovingDown() const;
 
-    bool isMovingRight() const;
+  bool isMovingLeft() const;
 
-    bool isQuadTreeDebug() const;
+  bool isMovingRight() const;
+
+  bool isQuadTreeDebug() const;
 };
-
 
 #endif //ARES_PLAYERCOMMANDS_H

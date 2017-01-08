@@ -1,49 +1,52 @@
 #pragma once
 
-enum ValueType{
-    NONE,
-    BOOLEAN,
-    STRING,
-    NUMBER
+enum ValueType {
+  NONE,
+  BOOLEAN,
+  STRING,
+  NUMBER
 };
 
 #include <string>
 
 class ReflectorValue {
-    bool m_modified;
-    ValueType type;
+  bool m_modified;
+  ValueType type;
 
-    std::string value_str;
+  std::string value_str;
 
-    float value_number;
+  float value_number;
 
-    bool value_boolean;
+  bool value_boolean;
 
-public:
+ public:
+  ReflectorValue(ValueType m_type = NONE);
 
-    ReflectorValue(ValueType m_type = NONE);
-    ReflectorValue(float value_number);
-    ReflectorValue(const char* s);
-    ReflectorValue(const std::string &value_str);
-    ReflectorValue(bool value_boolean);
+  ReflectorValue(float value_number);
 
-    ReflectorValue(const ReflectorValue& other) = default;
+  ReflectorValue(const char *s);
 
-    const std::string &get_value_str() const;
+  ReflectorValue(const std::string &value_str);
 
-    void set_value_str(const std::string &m_value_str);
+  ReflectorValue(bool value_boolean);
 
-    float get_value_number() const;
+  ReflectorValue(const ReflectorValue &other) = default;
 
-    void set_value_number(float m_value_number);
+  const std::string &get_value_str() const;
 
-    bool get_value_boolean() const;
+  void set_value_str(const std::string &m_value_str);
 
-    void set_value_boolean(bool m_value_boolean);
+  float get_value_number() const;
 
-    bool is_modified() const;
+  void set_value_number(float m_value_number);
 
-    void markClean() { m_modified = false; }
+  bool get_value_boolean() const;
 
-    ValueType get_value_type() const { return type; }
+  void set_value_boolean(bool m_value_boolean);
+
+  bool is_modified() const;
+
+  void markClean() { m_modified = false; }
+
+  ValueType get_value_type() const { return type; }
 };

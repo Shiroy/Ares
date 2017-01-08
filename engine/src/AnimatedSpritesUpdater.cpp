@@ -6,18 +6,18 @@
 
 AnimatedSpritesUpdater::AnimatedSpritesUpdater() {}
 
-AnimatedSpritesUpdater & AnimatedSpritesUpdater::getInstance() {
-    static AnimatedSpritesUpdater instance;
-    return instance;
+AnimatedSpritesUpdater &AnimatedSpritesUpdater::getInstance() {
+  static AnimatedSpritesUpdater instance;
+  return instance;
 }
 
 void AnimatedSpritesUpdater::insert(std::weak_ptr<AnimatedSprite> sprite) {
-    sprites.push_back(sprite);
+  sprites.push_back(sprite);
 }
 
 void AnimatedSpritesUpdater::update(sf::Time dt) {
-    for (auto sprite: sprites) {
-        auto spriteLocked = sprite.lock();
-        spriteLocked->update(dt);
-    }
+  for (auto sprite: sprites) {
+    auto spriteLocked = sprite.lock();
+    spriteLocked->update(dt);
+  }
 }

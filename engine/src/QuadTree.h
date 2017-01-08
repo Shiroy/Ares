@@ -5,7 +5,6 @@
 #ifndef ARES_QUADTREE_H
 #define ARES_QUADTREE_H
 
-
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -15,68 +14,69 @@
 using SpriteList = std::list<std::weak_ptr<sf::Sprite>>;
 
 class QuadTree : public sf::Drawable {
-    static const unsigned int maxLevel = 15;
-    unsigned int level;
+  static const unsigned int maxLevel = 15;
+  unsigned int level;
 
-    unsigned int nodeCapacity;
+  unsigned int nodeCapacity;
 
-    SpriteList nodes;
+  SpriteList nodes;
 
-    bool isSplit;
+  bool isSplit;
 
-    std::unique_ptr<QuadTree> northWest;
-    std::unique_ptr<QuadTree> northEast;
-    std::unique_ptr<QuadTree> southWest;
-    std::unique_ptr<QuadTree> southEast;
+  std::unique_ptr<QuadTree> northWest;
+  std::unique_ptr<QuadTree> northEast;
+  std::unique_ptr<QuadTree> southWest;
+  std::unique_ptr<QuadTree> southEast;
 
-    sf::RectangleShape shape;
+  sf::RectangleShape shape;
 
-    QuadTree(const QuadTree&) = delete;
-    void operator=(const QuadTree&) = delete;
-public:
-    QuadTree(const unsigned int &x = 0,
-             const unsigned int &y = 0,
-             const unsigned int &width = 1,
-             const unsigned int &height = 1,
-             const unsigned int &node_capacity_ = 5,
-             const unsigned int &level_ = 0);
+  QuadTree(const QuadTree &) = delete;
 
-    void setNodeCapacity(unsigned int n);
+  void operator=(const QuadTree &) = delete;
 
-    void setShape(const unsigned int &x,
-                  const unsigned int &y,
-                  const unsigned int &width,
-                  const unsigned int &height);
+ public:
+  QuadTree(const unsigned int &x = 0,
+           const unsigned int &y = 0,
+           const unsigned int &width = 1,
+           const unsigned int &height = 1,
+           const unsigned int &node_capacity_ = 5,
+           const unsigned int &level_ = 0);
 
-    void setShape(const sf::RectangleShape &shape);
+  void setNodeCapacity(unsigned int n);
 
-    bool contains(const std::unique_ptr<QuadTree> &child, std::weak_ptr<sf::Sprite> sprite);
+  void setShape(const unsigned int &x,
+                const unsigned int &y,
+                const unsigned int &width,
+                const unsigned int &height);
 
-    void insert(std::weak_ptr<sf::Sprite> node);
+  void setShape(const sf::RectangleShape &shape);
 
-    bool split();
+  bool contains(const std::unique_ptr<QuadTree> &child, std::weak_ptr<sf::Sprite> sprite);
 
-    bool unsplit();
+  void insert(std::weak_ptr<sf::Sprite> node);
 
-    void mergeSplitNodes();
+  bool split();
 
-    bool optimize();
+  bool unsplit();
 
-    unsigned int nodes_size() const;
+  void mergeSplitNodes();
 
-    bool isSplitUseful() const;
+  bool optimize();
 
-    SpriteList getNodesAt(const int &x, const int &y);
+  unsigned int nodes_size() const;
 
-    SpriteList getNodesAt(const sf::Vector2f pos);
+  bool isSplitUseful() const;
 
-    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+  SpriteList getNodesAt(const int &x, const int &y);
 
-    void clear();
+  SpriteList getNodesAt(const sf::Vector2f pos);
 
-    // brute force method to forceUpdate the quadtree (very expensive method)
-    void forceUpdate();
+  virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+
+  void clear();
+
+  // brute force method to forceUpdate the quadtree (very expensive method)
+  void forceUpdate();
 };
-
 
 #endif //ARES_QUADTREE_H

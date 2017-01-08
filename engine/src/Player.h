@@ -11,31 +11,30 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 class Player : public Character {
-    float maxPower;
-    float power;
-    float scope;
-    float speed;
-    std::weak_ptr<Entity> target;
-public:
-    float getSpeed() const;
+  float maxPower;
+  float power;
+  float scope;
+  float speed;
+  std::weak_ptr<Entity> target;
 
-    void setSpeed(float speed);
+ public:
+  float getSpeed() const;
 
-    const std::weak_ptr<Entity> getTarget() const;
+  void setSpeed(float speed);
 
-    void setTarget(const std::weak_ptr<Entity> &target);
+  const std::weak_ptr<Entity> getTarget() const;
 
-    bool isTargetInsideScope() const;
+  void setTarget(const std::weak_ptr<Entity> &target);
 
-    void drawTarget(sf::RenderTarget &canvas) const;
+  bool isTargetInsideScope() const;
 
-    void drawScope(sf::RenderTarget &canvas) const;
+  void drawTarget(sf::RenderTarget &canvas) const;
 
-public:
+  void drawScope(sf::RenderTarget &canvas) const;
 
-    virtual void handleReflectorUpdate(
-            const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) override;
+ public:
+  virtual void handleReflectorUpdate(
+      const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) override;
 };
-
 
 #endif //ARES_PLAYER_H
