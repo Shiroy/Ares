@@ -8,9 +8,8 @@
 #include "AnimatedSpriteCharacter.h"
 
 class Character : public AnimatedSpriteCharacter {
-public:
-    Character(const std::string &name = "character");
+ public:
+  explicit Character(const std::string &name = "character");
 };
-
 
 #endif //ARES_CHARACTER_H

@@ -5,30 +5,29 @@
 #ifndef ARES_EXCEPTION_H
 #define ARES_EXCEPTION_H
 
-
 #include <exception>
 #include <string>
 
 class AresException {
-    std::string emiter;
-    std::string method;
-    std::string message;
-public:
-    AresException(const std::string &message, const std::string &emiter = "", const std::string &method = "");
+  std::string emiter;
+  std::string method;
+  std::string message;
 
-    virtual std::string what() const;
+ public:
+  explicit AresException(const std::string &message, const std::string &emiter = "", const std::string &method = "");
 
-    const std::string &getEmiter() const;
+  virtual std::string what() const;
 
-    const std::string &getMethod() const;
+  const std::string &getEmiter() const;
 
-    const std::string &getMessage() const;
+  const std::string &getMethod() const;
+
+  const std::string &getMessage() const;
 };
 
 class EntityManagerException : public AresException {
-public:
-    EntityManagerException(const std::string &message, const std::string &method = "");
+ public:
+  explicit EntityManagerException(const std::string &message, const std::string &method = "");
 };
-
 
 #endif //ARES_EXCEPTION_H

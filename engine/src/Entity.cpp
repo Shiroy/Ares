@@ -9,53 +9,51 @@ Entity::Entity(const std::string &name, unsigned int maxHealth, int health) : na
                                                                               health(health) {}
 
 const std::string &Entity::getName() const {
-    return name;
+  return name;
 }
 
 void Entity::setName(const std::string &name) {
-    Entity::name = name;
+  Entity::name = name;
 }
 
 unsigned int Entity::getMaxHealth() const {
-    return maxHealth;
+  return maxHealth;
 }
 
 void Entity::setMaxHealth(unsigned int maxHealth) {
-    Entity::maxHealth = maxHealth;
+  Entity::maxHealth = maxHealth;
 }
 
 int Entity::getHealth() const {
-    return health;
+  return health;
 }
 
 void Entity::setHealth(int health) {
-    Entity::health = health;
+  Entity::health = health;
 }
 
 const sf::Vector2f Entity::getCenter() const {
-    sf::Vector2f center(getPosition());
-    center.x += getLocalBounds().width / 2;
-    center.y += getGlobalBounds().height / 2;
-    return center;
+  sf::Vector2f center(getPosition());
+  center.x += getLocalBounds().width / 2;
+  center.y += getGlobalBounds().height / 2;
+  return center;
 }
 
 void Entity::handleReflectorUpdate(
-        const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) {
-    for (auto element : reflector){
-        if(element.key() == "sprite"){
-            if(element.has_string()){
-                setTexture(TextureManager::getInstance().getTexture(element.string()));
-            }
-        }
-        else if(element.key() == "maxHealth"){
-            if(element.has_number()){
-                maxHealth = element.number();
-            }
-        }
-        else if(element.key() == "health"){
-            if(element.has_number()){
-                health = element.number();
-            }
-        }
+    const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) {
+  for (auto element : reflector) {
+    if (element.key() == "sprite") {
+      if (element.has_string()) {
+        setTexture(TextureManager::getInstance().getTexture(element.string()));
+      }
+    } else if (element.key() == "maxHealth") {
+      if (element.has_number()) {
+        maxHealth = element.number();
+      }
+    } else if (element.key() == "health") {
+      if (element.has_number()) {
+        health = element.number();
+      }
     }
+  }
 }

@@ -23,6 +23,7 @@ matrix:
       env: COMPILER=g++-5
 
 before_install:
+  - sudo pip install cpplint
   - sudo add-apt-repository ppa:george-edison55/cmake-3.x --yes
   - sudo apt-get update -qq
   - sudo apt-get install -y libsfml-dev cmake
@@ -30,6 +31,10 @@ before_install:
   - tar -xvf protobuf-2.6.1.tar.gz
   - cd protobuf-2.6.1 && ./configure --prefix=/usr && make && sudo make install
   - cd ..
+
+before_script:
+  - cpplint --recursive client engine server shared
+
 script:
   - mkdir install
   - mkdir build

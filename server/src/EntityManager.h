@@ -4,21 +4,23 @@
 #include <map>
 
 class Player;
+
 class Entity;
+
 class Client;
 
 class EntityManager {
-    std::map<int, std::shared_ptr<Entity>> allEntities;
+  std::map<int, std::shared_ptr<Entity>> allEntities;
 
-public:
-    static EntityManager& getInstance() {
-        static EntityManager instance;
-        return instance;
-    }
+ public:
+  static EntityManager &getInstance() {
+    static EntityManager instance;
+    return instance;
+  }
 
-    std::weak_ptr<Player> createPlayer(const std::string &name, std::shared_ptr<Client> client);
+  std::weak_ptr<Player> createPlayer(const std::string &name, std::shared_ptr<Client> client);
 
-    std::weak_ptr<Entity> createEntity(const std::string &name);
+  std::weak_ptr<Entity> createEntity(const std::string &name);
 
-    void removeById(int idToRemove);
+  void removeById(int idToRemove);
 };

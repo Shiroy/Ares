@@ -1,28 +1,29 @@
 #pragma once
 
 class Position {
-    float x;
-    float y;
-public:
-    Position(float x = 0.0f, float y = 0.0f);
+  float x;
+  float y;
 
-    float getX() const;
+ public:
+  explicit Position(float x = 0.0f, float y = 0.0f);
 
-    void setX(float x);
+  float getX() const;
 
-    float getY() const;
+  void setX(float x);
 
-    void setY(float y);
+  float getY() const;
 
-    bool operator==(const Position &rhs) const;
+  void setY(float y);
 
-    bool operator!=(const Position &rhs) const;
+  bool operator==(const Position &rhs) const;
 
-    float distance(const Position& rhs) const;
+  bool operator!=(const Position &rhs) const;
 
-    float distanceSquare(const Position &rhs) const;
+  float distance(const Position &rhs) const;
 
-    void move(float dx, float dy);
+  float distanceSquare(const Position &rhs) const;
 
-    void setPosition(float x, float y);
+  void move(float dx, float dy);
+
+  void setPosition(float x, float y);
 };

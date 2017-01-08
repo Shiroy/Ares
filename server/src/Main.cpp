@@ -2,9 +2,8 @@
 #include "Server.h"
 
 int main() {
+  Server::getInstance().run();
+  google::protobuf::ShutdownProtobufLibrary();
 
-    Server::getInstance().run();
-    google::protobuf::ShutdownProtobufLibrary();
-
-    return 0;
+  return 0;
 }

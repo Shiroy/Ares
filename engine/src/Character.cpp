@@ -4,6 +4,6 @@
 
 #include "Character.h"
 
-Character::Character(const std::string &name){
+Character::Character(const std::string &name) {
 //    Entity::setName(name);
 }
