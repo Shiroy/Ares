@@ -1,4 +1,7 @@
 # Ares
+
+![](https://travis-ci.org/Shiroy/Ares.svg?branch=master)
+
 ## Prepare
 
 Get the `sfml` latest version.
