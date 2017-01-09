@@ -1,6 +1,6 @@
 # Ares
 
-![](https://travis-ci.org/Shiroy/Ares.svg?branch=master)
+[![Build Status](https://travis-ci.org/Shiroy/Ares.svg?branch=master)](https://travis-ci.org/Shiroy/Ares)
 
 ## Prepare
 
