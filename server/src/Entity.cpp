@@ -23,7 +23,12 @@ void Entity::setInitialValues() {
   m_reflectors["animation"] = "none";
   m_reflectors["scope"] = 150.0f;
   m_reflectors["speed"] = 300.0f;
+
+  m_position.setPosition(150.f, 150.f);
 }
 
 void Entity::addToWorld() {
+}
+const Position &Entity::get_position() const {
+  return m_position;
 }

@@ -2,11 +2,14 @@
 // Created by tdancois on 7/29/16.
 //
 
+#include <ObjectMessage.pb.h>
 #include "Entity.h"
 #include "TextureManager.h"
 
-Entity::Entity(const std::string &name, unsigned int maxHealth, int health) : name(name), maxHealth(maxHealth),
-                                                                              health(health) {}
+Entity::Entity(const std::string &name, unsigned int maxHealth, int health)
+    : name(name),
+      maxHealth(maxHealth),
+      health(health) {}
 
 const std::string &Entity::getName() const {
   return name;
@@ -53,6 +56,10 @@ void Entity::handleReflectorUpdate(
     } else if (element.key() == "health") {
       if (element.has_number()) {
         health = element.number();
+      }
+    } else if (element.key() == "position") {
+      if (element.has_position()) {
+        setPosition(element.position().x(), element.position().y());
       }
     }
   }

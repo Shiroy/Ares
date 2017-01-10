@@ -38,6 +38,7 @@ message ModifyObject {
             string string = 2;
             float number = 3;
             bool boolean = 4;
+            Position position = 5;
         }
     }
 }

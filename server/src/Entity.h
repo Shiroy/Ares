@@ -19,6 +19,9 @@ class Entity {
  public:
   Entity(unsigned int m_id, const std::string &m_name);
 
+  const Position &get_position() const;
+
+
   void move(float dx, float dy);
 
   virtual EntityType getType() { return ENTITY; }

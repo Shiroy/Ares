@@ -6,7 +6,8 @@
 #include <thread>
 #include <MathUtil.h>
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "Ares") {
+Game::Game()
+    : mWindow(sf::VideoMode(640, 480), "Ares") {
   mWindow.setVerticalSyncEnabled(true);
 
   map.load("assets/map/map_v1.json.map", "assets/img/terrain.png");
@@ -42,17 +43,22 @@ void Game::processEvents() {
   sf::Event event;
   while (mWindow.pollEvent(event)) {
     switch (event.type) {
-      case sf::Event::KeyPressed:playerCommands.handleInput(event.key.code, true);
+      case sf::Event::KeyPressed:
+        playerCommands.handleInput(event.key.code, true);
         break;
-      case sf::Event::KeyReleased:playerCommands.handleInput(event.key.code, false);
+      case sf::Event::KeyReleased:
+        playerCommands.handleInput(event.key.code, false);
         break;
       case sf::Event::MouseButtonPressed:
         if (event.mouseButton.button == sf::Mouse::Left) {
           auto nodes = quadTree.getNodesAt(
-              mWindow.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+              mWindow.mapPixelToCoords(
+                  sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
           if (nodes.size() > 0) {
             auto shared_c = nodes.back().lock();
-            if (!player.expired()) player.lock()->setTarget(std::dynamic_pointer_cast<Entity>(shared_c));
+            if (!player.expired())
+              player.lock()->setTarget(std::dynamic_pointer_cast<Entity>(shared_c));
           }
         }
         break;
@@ -64,8 +70,19 @@ void Game::processEvents() {
 
 void Game::update(sf::Time deltaTime) {
   if (!player.expired()) {
-    player.lock()->update(deltaTime);
+    const std::shared_ptr<Player> &player_sharedptr =
+        player.lock();
+
+    player_sharedptr->update(deltaTime);
     playerCommands.updatePlayer(deltaTime);
+
+    AnimatedSpritesUpdater::getInstance().update(deltaTime);
+
+    LockedQueue<AresProtocol::AresMessage> &sendingQueue =
+        networkThread.getSendingQueue();
+
+    movementDispatcher.updateNetwork(
+        playerCommands, sendingQueue);
   }
 }
 
@@ -88,20 +105,29 @@ void Game::render() {
 
   quadTree.forceUpdate();
 
-  if (playerCommands.isQuadTreeDebug()) mWindow.draw(quadTree);
+  if (playerCommands.isQuadTreeDebug())
+    mWindow.draw(quadTree);
 
   mWindow.display();
 }
 
 sf::View Game::calculateViewport() {
-  float topX = player.lock()->getCenter().x - mWindow.getSize().x / 2.0f;
-  float topY = player.lock()->getCenter().y - mWindow.getSize().y / 2.0f;
+  float topX =
+      player.lock()->getCenter().x - mWindow.getSize().x / 2.0f;
+  float topY =
+      player.lock()->getCenter().y - mWindow.getSize().y / 2.0f;
 
-  float maxX = static_cast<float>(map.getMapSize().x) - mWindow.getSize().x;
-  float maxY = static_cast<float>(map.getMapSize().y) - mWindow.getSize().y;
+  float maxX =
+      static_cast<float>(map.getMapSize().x) - mWindow.getSize().x;
+  float maxY =
+      static_cast<float>(map.getMapSize().y) - mWindow.getSize().y;
 
-  sf::Vector2i topLeft(static_cast<int>(clamp(0.0f, topX, maxX)), static_cast<int>(clamp(0.0f, topY, maxY)));
-  return sf::View(sf::FloatRect(topLeft.x, topLeft.y, mWindow.getSize().x, mWindow.getSize().y));
+  sf::Vector2i topLeft(static_cast<int>(clamp(0.0f, topX, maxX)),
+                       static_cast<int>(clamp(0.0f, topY, maxY)));
+  return sf::View(sf::FloatRect(topLeft.x,
+                                topLeft.y,
+                                mWindow.getSize().x,
+                                mWindow.getSize().y));
 }
 
 void Game::handlePacket(const AresProtocol::AresMessage &message) {
@@ -117,8 +143,7 @@ void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject)
     case AresProtocol::ModifyObject::kCreate: {
       auto object = modifyObject.create();
       switch (object.type()) {
-        case AresProtocol::ModifyObject::CreateObject::PLAYER:
-
+        case AresProtocol::ModifyObject::CreateObject::PLAYER: {
           std::shared_ptr<Entity> new_character;
 
           if (object.myself()) {
@@ -138,12 +163,17 @@ void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject)
           new_character->handleReflectorUpdate(object.reflector());
 
           quadTree.insert(new_character);
-
+        }
           break;
+        default:break;
       }
     }
       break;
     case AresProtocol::ModifyObject::kUpdate: {
+      if (!EntityManager::getInstance().hasEntity(modifyObject.id())) return;
+
+      if (modifyObject.id() == EntityManager::getInstance().getPlayerId()) return;
+
       auto entity = EntityManager::getInstance().getEntity(modifyObject.id());
       auto entity_shr_ptr = entity.lock();
       entity_shr_ptr->handleReflectorUpdate(modifyObject.update().reflector());

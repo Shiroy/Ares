@@ -17,27 +17,32 @@ void Player::addToWorld() {
 }
 
 void Player::sendCreationMessage() {
-  AresProtocol::AresMessage addMessage = getCreationMessage();
+  AresProtocol::AresMessage addMessage = getCreationMessage(true);
+
   client->sendPacket(addMessage);
+
   addMessage.mutable_modifyobject()->mutable_create()->set_myself(false);
   Server::getInstance().broadcast(addMessage, client);
 }
 
-AresProtocol::AresMessage Player::getCreationMessage() {
+AresProtocol::AresMessage Player::getCreationMessage(const bool setMyself) {
   AresProtocol::AresMessage addMessage;
   AresProtocol::ModifyObject *modifyObject = addMessage.mutable_modifyobject();
 
   modifyObject->set_id(getId());
 
-  AresProtocol::ModifyObject_CreateObject *createObject = modifyObject->mutable_create();
-  createObject->set_myself(true);
-  createObject->mutable_position()->set_x(1000.0f);
-  createObject->mutable_position()->set_y(1000.0f);
-  createObject->set_type(AresProtocol::ModifyObject_CreateObject_ObjectType_PLAYER);
+  AresProtocol::ModifyObject_CreateObject *createObject =
+      modifyObject->mutable_create();
+  createObject->set_myself(setMyself);
+  createObject->mutable_position()->set_x(get_position().getX());
+  createObject->mutable_position()->set_y(get_position().getY());
+  createObject->set_type(
+      AresProtocol::ModifyObject_CreateObject_ObjectType_PLAYER);
 
   auto reflectors = m_reflectors.getValueForCreation();
   for (auto reflectorValue : reflectors) {
-    AresProtocol::ModifyObject_ReflectorMap *pktReflector = createObject->add_reflector();
+    AresProtocol::ModifyObject_ReflectorMap *pktReflector =
+        createObject->add_reflector();
     pktReflector->set_key(reflectorValue.first);
 
     switch (reflectorValue.second.get_value_type()) {

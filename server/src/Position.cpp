@@ -47,3 +47,8 @@ void Position::setPosition(float x, float y) {
   setX(x);
   setY(y);
 }
+
+Position::Position(const AresProtocol::Position &pos) {
+  x = pos.x();
+  y = pos.y();
+}

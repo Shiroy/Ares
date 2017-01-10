@@ -25,7 +25,8 @@ std::weak_ptr<Player> EntityManager::addNewPlayer(const unsigned int &id) {
 }
 
 std::weak_ptr<Character> EntityManager::addNewCharacter(const unsigned int &id) {
-  if (entities.count(id) != 0) throw new EntityManagerException("addNewCharacter", "ID already used");
+  if (entities.count(id) != 0)
+    throw new EntityManagerException("addNewCharacter", "ID already used");
 
   entities[id].reset(new Character());
   AnimatedSpritesUpdater::getInstance().insert(std::dynamic_pointer_cast<AnimatedSprite>(entities[id]));
@@ -34,23 +35,26 @@ std::weak_ptr<Character> EntityManager::addNewCharacter(const unsigned int &id) 
 }
 
 void EntityManager::setPlayer(const unsigned int &id) {
-  if (entities.count(id) == 0) throw new EntityManagerException("setPlayer", "this ID do not exist");
+  if (entities.count(id) == 0)
+    throw new EntityManagerException("setPlayer", "this ID do not exist");
 
   player_id = id;
   isPlayerSet = true;
 }
 
-std::weak_ptr<Entity> EntityManager::getEntity(const unsigned int &id) {
+std::weak_ptr<Entity> EntityManager::getEntity(const unsigned int id) {
   return std::dynamic_pointer_cast<Entity>(entities.at(id));
 }
 
 std::weak_ptr<Player> EntityManager::getPlayer() {
-  if (!isPlayerSet) throw new EntityManagerException("getPlayer", "no player set");
+  if (!isPlayerSet)
+    throw new EntityManagerException("getPlayer", "no player set");
   return std::dynamic_pointer_cast<Player>(entities.at(player_id));
 }
 
 void EntityManager::removeEntity(const unsigned int &id) {
-  if (entities.count(id) != 0) throw new EntityManagerException("getPlayer", "ID already used");
+  if (entities.count(id) == 0)
+    throw new EntityManagerException("setPlayer", "this ID do not exist");
   entities.erase(id);
 }
 
@@ -62,5 +66,12 @@ void EntityManager::draw(sf::RenderTarget &canvas) const {
   for (auto entity: entities) {
     canvas.draw(*entity.second);
   }
+}
+unsigned int EntityManager::getPlayerId() const {
+  return player_id;
+}
+
+const bool EntityManager::hasEntity(const unsigned int id) const {
+  return entities.count(id) != 0;
 }
 

@@ -9,7 +9,7 @@ static const unsigned short defaultListenerPort = 21194;
 
 class Listener_Thread {
  public:
-  Listener_Thread(const unsigned int &listenerPort = defaultListenerPort) : port(listenerPort), m_stop(false) {}
+  Listener_Thread(const unsigned short &listenerPort = defaultListenerPort) : port(listenerPort), m_stop(false) {}
 
   void run();
 
@@ -19,7 +19,7 @@ class Listener_Thread {
   void stop();
 
  private:
-  unsigned int port;
+  unsigned short port;
   //Used by both threads
   std::atomic_bool m_stop;
 

@@ -28,9 +28,13 @@ class EntityManager {
 
   std::weak_ptr<Character> addNewCharacter(const unsigned int &id);
 
+  unsigned int getPlayerId() const;
+
   void setPlayer(const unsigned int &id);
 
-  std::weak_ptr<Entity> getEntity(const unsigned int &id);
+  const bool hasEntity(const unsigned int id) const;
+
+  std::weak_ptr<Entity> getEntity(const unsigned int id);
 
   std::weak_ptr<Player> getPlayer();
 

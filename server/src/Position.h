@@ -1,11 +1,14 @@
 #pragma once
 
+#include <Position.pb.h>
+
 class Position {
   float x;
   float y;
 
  public:
   explicit Position(float x = 0.0f, float y = 0.0f);
+  Position(const AresProtocol::Position &pos);
 
   float getX() const;
 

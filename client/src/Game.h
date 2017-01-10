@@ -10,6 +10,7 @@
 #include <TextureManager.h>
 #include "PlayerCommands.h"
 #include "NetworkThread.h"
+#include "MovementDispatcher.h"
 #include <Tilemap.h>
 #include <QuadTree.h>
 #include <EntityManager.h>
@@ -21,6 +22,12 @@ class Game {
 
   std::weak_ptr<Player> player;
   PlayerCommands playerCommands;
+
+  MovementDispatcher movementDispatcher;
+
+  Tilemap map;
+
+  NetworkThread networkThread;
 
  public:
   Game();
@@ -34,11 +41,7 @@ class Game {
 
   void render();
 
-  Tilemap map;
-
   sf::View calculateViewport();
-
-  NetworkThread networkThread;
 
   void handlePacket(const AresProtocol::AresMessage &message);
 

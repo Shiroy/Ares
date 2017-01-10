@@ -41,7 +41,7 @@ void NetworkThread::run() {
         pkt.append(data, static_cast<size_t>(messageToSend.ByteSize()));
         socket.send(pkt);
       } else {
-        std::cerr << "Error serializing a messgae" << std::endl;
+        std::cerr << "Error serializing a message" << std::endl;
       }
 
       delete[] data;

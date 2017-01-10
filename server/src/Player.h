@@ -17,5 +17,5 @@ class Player : public Entity {
 
   void sendCreationMessage();
 
-  AresProtocol::AresMessage getCreationMessage();
+  AresProtocol::AresMessage getCreationMessage(const bool setMyself);
 };
