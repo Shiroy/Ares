@@ -77,3 +77,7 @@ void PlayerCommands::updatePlayer(sf::Time deltaTime) {
 bool PlayerCommands::isQuadTreeDebug() const {
   return quadTreeDebug;
 }
+
+bool PlayerCommands::isMoving() const {
+  return movingUp || movingDown || movingLeft || movingRight;
+}

@@ -18,4 +18,6 @@ class Server {
   Listener_Thread m_listenerThread;
 
   std::list<std::shared_ptr<Client>> m_all_client;
+  void sendExistingPlayersToNewClient(const std::shared_ptr<Client> &newSession,
+                                      const std::shared_ptr<Player> &newPlayer_shrd) const;
 };

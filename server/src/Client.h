@@ -42,4 +42,5 @@ class Client {
   bool toBeDeleted;
 
   void handlePacket(const AresProtocol::AresMessage &message);
+  void handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject);
 };

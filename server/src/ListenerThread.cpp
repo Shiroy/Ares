@@ -40,7 +40,7 @@ void Listener_Thread::run() {
         m_sessionToAdd.push_back(newSession);
         sessionStorage.push_back(std::make_tuple(newSession, newClient));
         selector.add(*newClient);
-        std::cout << "Un client c'est connecté" << std::endl;
+        std::cout << "A client has connected" << std::endl;
       } else {
         perror("ListenerThread");
       }
@@ -65,7 +65,7 @@ void Listener_Thread::run() {
             }
             break;
           }
-          case sf::Socket::Disconnected:std::cout << "Un client c'est déconnecté" << std::endl;
+          case sf::Socket::Disconnected:std::cout << "A client has disconnected" << std::endl;
             m_sessionToRemove.push_back(session);
             selector.remove(*client);
             client->disconnect();
@@ -86,7 +86,7 @@ void Listener_Thread::run() {
           sf::Socket::Status s = client->send(pkt);
 
           if (s != sf::Socket::Done) {
-            std::cout << "Erreur à l'envoie d'un paquet" << std::endl;
+            std::cout << "An error occurred when sending a package" << std::endl;
             perror("ListenerThread");
           }
         } else {

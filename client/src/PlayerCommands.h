@@ -38,6 +38,8 @@ class PlayerCommands {
 
   bool isMovingRight() const;
 
+  bool isMoving() const;
+
   bool isQuadTreeDebug() const;
 };
 

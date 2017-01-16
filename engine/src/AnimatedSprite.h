@@ -20,6 +20,7 @@ class AnimatedSprite : public Entity {
   std::map<std::string, SpriteAnimation> animations;
   std::string current_animation;
   bool playing = false;
+
  public:
   void update(sf::Time dt);
 
@@ -27,9 +28,13 @@ class AnimatedSprite : public Entity {
   addAnimation(const std::string &name, const int &frameSizeX, const int &framseSizeY, const std::vector<int> frames,
                const int &defaultFrame, const sf::Time &duration, const bool &repeat);
 
+  const std::string &getCurrentAnimation() const;
+
   void play(const std::string &name);
 
   void stop();
+
+  bool isAnimationPlaying() const;
 
   virtual void handleReflectorUpdate(
       const ::google::protobuf::RepeatedPtrField<::AresProtocol::ModifyObject_ReflectorMap> &reflector) override;
