@@ -15,10 +15,14 @@ typedef std::tuple<std::shared_ptr<Client>, std::shared_ptr<sf::TcpSocket>> Sess
 
 void Listener_Thread::run() {
   sf::TcpListener listener;
-  if (listener.listen(port) != sf::Socket::Done) {
-    std::cerr << "Cannot bind the listener socket" << std::endl;
-    perror("ListenerThread");
-    exit(1);
+//  if (listener.listen(port) != sf::Socket::Done) {
+//    std::cerr << "Cannot bind the listener socket" << std::endl;
+//    perror("ListenerThread");
+//    exit(1);
+//  }
+
+  while (listener.listen(port) != sf::Socket::Done) {
+    port++;
   }
 
   std::cout << "Server listening for new connection on port " << port << std::endl;

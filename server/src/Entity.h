@@ -10,7 +10,7 @@ enum EntityType {
 };
 
 class Entity {
- protected:
+ public:
   long m_id;
   std::string m_name;
   Position m_position;

@@ -3,10 +3,13 @@
 #include <LockedQueue.h>
 #include <memory>
 #include <Ares.pb.h>
+#include <SFML/System/Clock.hpp>
 
 class Player;
 
-class Client {
+class Client: public std::enable_shared_from_this<Client> {
+ private:
+  sf::Clock lastPositionUpdate;
  public:
   Client();
 
@@ -42,5 +45,5 @@ class Client {
   bool toBeDeleted;
 
   void handlePacket(const AresProtocol::AresMessage &message);
-  void handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject);
+  void handleMsgModifyObject(const AresProtocol::AresMessage &modifyObject);
 };

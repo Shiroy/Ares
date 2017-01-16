@@ -9,7 +9,7 @@
 #include "PlayerCommands.h"
 #include "NetworkThread.h"
 
-static const int DEFAULT_REFRESH_RATE_MS = 1000;
+static const int DEFAULT_REFRESH_RATE_MS = 30;
 
 class MovementDispatcher {
  private:

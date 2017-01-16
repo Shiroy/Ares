@@ -14,7 +14,7 @@ void MovementDispatcher::updateNetwork(const PlayerCommands &playerCommands,
                                        LockedQueue<AresProtocol::AresMessage> &sendingQueue) {
   sf::Time deltaTime = clock.getElapsedTime();
 
-  if (deltaTime.asMicroseconds() > refreshRateMs) {
+  if (deltaTime.asMilliseconds() > refreshRateMs) {
     if (playerCommands.isMoving() || needUpdate) {
       const std::shared_ptr<Player> &player_sharedptr =
           playerCommands.getPlayer().lock();
@@ -25,8 +25,10 @@ void MovementDispatcher::updateNetwork(const PlayerCommands &playerCommands,
       sendingQueue.push_back(*message);
 
       needUpdate = playerCommands.isMoving();
+      clock.restart();
+      std::cout << "sent message"
+                << std::endl;
     }
-    clock.restart();
   }
 }
 const AresProtocol::AresMessage *

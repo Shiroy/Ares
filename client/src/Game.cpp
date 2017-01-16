@@ -70,10 +70,6 @@ void Game::processEvents() {
 
 void Game::update(sf::Time deltaTime) {
   if (!player.expired()) {
-    const std::shared_ptr<Player> &player_sharedptr =
-        player.lock();
-
-    player_sharedptr->update(deltaTime);
     playerCommands.updatePlayer(deltaTime);
 
     AnimatedSpritesUpdater::getInstance().update(deltaTime);
@@ -171,8 +167,6 @@ void Game::handleMsgModifyObject(const AresProtocol::ModifyObject &modifyObject)
       break;
     case AresProtocol::ModifyObject::kUpdate: {
       if (!EntityManager::getInstance().hasEntity(modifyObject.id())) return;
-
-      if (modifyObject.id() == EntityManager::getInstance().getPlayerId()) return;
 
       auto entity = EntityManager::getInstance().getEntity(modifyObject.id());
       auto entity_shr_ptr = entity.lock();

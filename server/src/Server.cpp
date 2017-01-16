@@ -27,11 +27,13 @@ void Server::run() {
 
   while (!stop) {
     while (m_listenerThread.getSessionToAdd().size() > 0) {
-      std::shared_ptr<Client> newSession = m_listenerThread.getSessionToAdd().front();
+      std::shared_ptr<Client> newSession =
+          m_listenerThread.getSessionToAdd().front();
       m_all_client.push_back(newSession);
       m_listenerThread.getSessionToAdd().pop();
 
-      auto newPlayer = EntityManager::getInstance().createPlayer("Player", newSession);
+      auto newPlayer =
+          EntityManager::getInstance().createPlayer("Player", newSession);
       const std::shared_ptr<Player> &newPlayer_shrd = newPlayer.lock();
       newPlayer_shrd->addToWorld();
       newSession->setPlayer(newPlayer);
@@ -40,7 +42,8 @@ void Server::run() {
     }
 
     while (m_listenerThread.getSessionToRemove().size() > 0) {
-      std::shared_ptr<Client> sessionToRemove = m_listenerThread.getSessionToRemove().front();
+      std::shared_ptr<Client> sessionToRemove =
+          m_listenerThread.getSessionToRemove().front();
       m_all_client.remove(sessionToRemove);
       m_listenerThread.getSessionToRemove().pop();
 
