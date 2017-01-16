@@ -4,7 +4,18 @@
 
 ## Prepare
 
-Get the `sfml` latest version.
+Packages needed on Ubuntu:
+
+SFML
+```
+libsfml-dev
+```
+
+Protobuf
+```
+libprotobuf-dev
+protobuf-compiler
+```
 
 ## Compile
 - mkdir install

@@ -36,18 +36,7 @@ void Server::run() {
       newPlayer_shrd->addToWorld();
       newSession->setPlayer(newPlayer);
 
-      for (auto entity: EntityManager::getInstance().getAllEntities()) {
-        std::weak_ptr<Player> player = std::dynamic_pointer_cast<Player>(entity.second);
-
-        // to be changed when we'll have other entitites
-        if (player.expired()) continue;
-
-        const std::shared_ptr<Player> &player_shrd = player.lock();
-        if (player_shrd->getId() != newPlayer_shrd->getId()) {
-          // player initialisation message will me send to client on player creation
-          newSession->sendPacket(player_shrd.get()->getCreationMessage(false));
-        }
-      }
+      sendExistingPlayersToNewClient(newSession, newPlayer_shrd);
     }
 
     while (m_listenerThread.getSessionToRemove().size() > 0) {
@@ -74,6 +63,21 @@ void Server::run() {
   listenerThread.join();
 
   std::cout << "Exiting server" << std::endl;
+}
+void Server::sendExistingPlayersToNewClient(const std::shared_ptr<Client> &newSession,
+                                            const std::shared_ptr<Player> &newPlayer_shrd) const {
+  for (auto entity: EntityManager::getInstance().getAllEntities()) {
+    std::weak_ptr<Player> player = dynamic_pointer_cast<Player>(entity.second);
+
+    // to be changed when we'll have other entitites
+    if (player.expired()) continue;
+
+    const std::shared_ptr<Player> &player_shrd = player.lock();
+    if (player_shrd->getId() != newPlayer_shrd->getId()) {
+      // player initialisation message will me send to client on player creation
+      newSession->sendPacket(player_shrd.get()->getCreationMessage(false));
+    }
+  }
 }
 
 Server &Server::getInstance() {

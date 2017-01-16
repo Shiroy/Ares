@@ -9,6 +9,8 @@
 #include "PlayerCommands.h"
 #include "NetworkThread.h"
 
+static const int DEFAULT_REFRESH_RATE_MS = 1000;
+
 class MovementDispatcher {
  private:
   const int32_t refreshRateMs;
@@ -16,7 +18,7 @@ class MovementDispatcher {
   bool needUpdate;
 
  public:
-  explicit MovementDispatcher(const int32_t refreshRateMs = 50);
+  explicit MovementDispatcher(const int32_t refreshRateMs = DEFAULT_REFRESH_RATE_MS);
   void updateNetwork(const PlayerCommands &playerCommands,
                      LockedQueue<AresProtocol::AresMessage> &sendingQueue);
 

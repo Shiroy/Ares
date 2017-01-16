@@ -12,7 +12,7 @@ MovementDispatcher::MovementDispatcher(const int32_t refreshRateMs)
 
 void MovementDispatcher::updateNetwork(const PlayerCommands &playerCommands,
                                        LockedQueue<AresProtocol::AresMessage> &sendingQueue) {
-  sf::Time deltaTime = clock.restart();
+  sf::Time deltaTime = clock.getElapsedTime();
 
   if (deltaTime.asMicroseconds() > refreshRateMs) {
     if (playerCommands.isMoving() || needUpdate) {
@@ -26,6 +26,7 @@ void MovementDispatcher::updateNetwork(const PlayerCommands &playerCommands,
 
       needUpdate = playerCommands.isMoving();
     }
+    clock.restart();
   }
 }
 const AresProtocol::AresMessage *
