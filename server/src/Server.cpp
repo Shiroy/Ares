@@ -67,7 +67,7 @@ void Server::run() {
 void Server::sendExistingPlayersToNewClient(const std::shared_ptr<Client> &newSession,
                                             const std::shared_ptr<Player> &newPlayer_shrd) const {
   for (auto entity: EntityManager::getInstance().getAllEntities()) {
-    std::weak_ptr<Player> player = dynamic_pointer_cast<Player>(entity.second);
+    std::weak_ptr<Player> player = std::dynamic_pointer_cast<Player>(entity.second);
 
     // to be changed when we'll have other entitites
     if (player.expired()) continue;
